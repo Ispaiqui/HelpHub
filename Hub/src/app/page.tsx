@@ -1,11 +1,5 @@
-import { Header } from "@/components/helphub/header";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <>
-      <main>
-        <h1>Nada</h1>
-      </main>
-    </>
-  )
+  redirect("/helphub");
 }
