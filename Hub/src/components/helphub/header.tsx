@@ -11,6 +11,7 @@ import {
   SheetContent,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navLinks = [
   { name: "Início", href: "/helphub" },
@@ -36,7 +37,7 @@ export function Header() {
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
               <span className="font-bold text-white text-2xl">H</span>
             </div>
-            <span className="font-bold text-2xl text-slate-900 tracking-tight">HelpHub</span>
+            <span className="font-bold text-2xl text-foreground tracking-tight">HelpHub</span>
           </Link>
         </div>
 
@@ -46,7 +47,7 @@ export function Header() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-sm font-medium text-slate-600 transition-all duration-200 hover:text-blue-500 hover:scale-105"
+              className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
             >
               {link.name}
             </Link>
@@ -54,6 +55,7 @@ export function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
+          <ThemeToggle />
           <Button variant="outline" className="rounded-full" onClick={() => router.push("#contato")}>
             Contato
           </Button>
@@ -76,12 +78,15 @@ export function Header() {
                   <button
                     key={link.name}
                     onClick={() => handleNav(link.href)}
-                    className="text-left text-lg font-medium text-slate-900 transition-all duration-200 hover:text-blue-500 hover:-translate-y-0.5"
+                    className="text-left text-lg font-medium text-foreground transition-all duration-200 hover:text-primary hover:-translate-y-0.5"
                   >
                     {link.name}
                   </button>
                 ))}
                 <div className="flex flex-col gap-3 mt-4 border-t pt-6">
+                  <div className="flex justify-center mb-2">
+                    <ThemeToggle />
+                  </div>
                   <Button variant="outline" className="w-full justify-center" onClick={() => handleNav("#contato")}>
                     Contato
                   </Button>

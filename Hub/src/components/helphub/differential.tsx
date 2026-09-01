@@ -2,7 +2,7 @@ import { Target, X, Check } from "lucide-react";
 
 export function Differential() {
   return (
-    <section id="diferencial" className="bg-slate-900 text-white py-24 sm:py-32 relative overflow-hidden">
+    <section id="diferencial" className="bg-slate-900 dark:bg-slate-950 text-white py-24 sm:py-32 relative overflow-hidden">
       {/* Elementos decorativos */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[120px] pointer-events-none opacity-50"></div>
@@ -15,7 +15,7 @@ export function Differential() {
             </div>
           </div>
           
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-12">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-12">
             Nosso Diferencial
           </h2>
 
@@ -28,8 +28,8 @@ export function Differential() {
                   <X className="h-5 w-5 text-red-500" />
                   <span className="font-medium uppercase tracking-wider text-xs">Não queremos ser apenas</span>
                 </div>
-                <p className="text-xl font-medium text-slate-300">
-                  "A empresa que faz site."
+                <p className="text-xl font-medium text-slate-200">
+                  &quot;A empresa que faz site.&quot;
                 </p>
               </div>
 
@@ -39,8 +39,8 @@ export function Differential() {
                   <X className="h-5 w-5 text-red-500" />
                   <span className="font-medium uppercase tracking-wider text-xs">Nem apenas</span>
                 </div>
-                <p className="text-xl font-medium text-slate-300">
-                  "A empresa que vende ERP."
+                <p className="text-xl font-medium text-slate-200">
+                  &quot;A empresa que vende ERP.&quot;
                 </p>
               </div>
             </div>

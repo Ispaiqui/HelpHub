@@ -29,8 +29,8 @@ export function ServiceDialog({ selected, onClose }: ServiceDialogProps) {
           
           <div className="p-6 flex flex-col">
             <DialogHeader className="text-left space-y-1">
-              <DialogTitle className="text-2xl font-bold text-slate-900">{selected.title}</DialogTitle>
-              <DialogDescription className="text-base text-slate-600">
+              <DialogTitle className="text-2xl font-bold text-foreground">{selected.title}</DialogTitle>
+              <DialogDescription className="text-base text-muted-foreground">
                 {selected.description}
               </DialogDescription>
             </DialogHeader>
@@ -41,7 +41,7 @@ export function ServiceDialog({ selected, onClose }: ServiceDialogProps) {
                   <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
                     <ArrowRight className="h-3 w-3 text-primary" />
                   </div>
-                  <span className="text-sm text-slate-700">{feature}</span>
+                  <span className="text-sm text-foreground">{feature}</span>
                 </li>
               ))}
             </ul>

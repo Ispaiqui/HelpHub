@@ -3,7 +3,7 @@ import { MessageCircle, Mail, MapPin } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-300 py-12 sm:py-16">
+    <footer className="bg-slate-900 dark:bg-slate-950 text-slate-300 py-12 sm:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-8">
           {/* Brand & Info */}
@@ -53,7 +53,7 @@ export function Footer() {
                   href="https://wa.me/5511999999999" // Substitua pelo seu número
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-primary transition-colors"
                 >
                   WhatsApp: (11) 99999-9999
                 </a>
@@ -62,7 +62,7 @@ export function Footer() {
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-800">
                   <Mail className="h-5 w-5 text-primary" />
                 </div>
-                <a href="mailto:contato@helphub.com.br" className="hover:text-white transition-colors">
+                <a href="mailto:contato@helphub.com.br" className="hover:text-primary transition-colors">
                   contato@helphub.com.br
                 </a>
               </li>
@@ -81,10 +81,10 @@ export function Footer() {
             &copy; {new Date().getFullYear()} HelpHub. Todos os direitos reservados.
           </p>
           <div className="flex gap-4 text-sm text-slate-500">
-            <Link href="#" className="hover:text-white transition-colors">
+            <Link href="#" className="hover:text-primary transition-colors">
               Termos de Uso
             </Link>
-            <Link href="#" className="hover:text-white transition-colors">
+            <Link href="#" className="hover:text-primary transition-colors">
               Política de Privacidade
             </Link>
           </div>

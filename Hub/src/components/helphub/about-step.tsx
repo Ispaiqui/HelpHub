@@ -131,7 +131,7 @@ export function AboutStep() {
       <div className="relative h-72 w-full flex items-center justify-center overflow-hidden rounded-3xl">
         
         {/* Linha contínua no fundo conectando os itens */}
-        <div className="absolute top-[100px] left-0 right-0 h-[2px] bg-slate-200 -translate-y-1/2" />
+        <div className="absolute top-[100px] left-0 right-0 h-[2px] bg-border -translate-y-1/2" />
 
         {/* Trilha por onde a energia passa (do centro para a direita) */}
         <div className="absolute top-[100px] left-1/2 h-[2px] w-[140px] sm:w-[200px] md:w-[260px] -translate-y-1/2">
@@ -155,7 +155,7 @@ export function AboutStep() {
                   relative flex items-center justify-center rounded-full transition-all duration-200 shadow-lg 
                   ${isCharged 
                     ? "h-20 w-20 bg-blue-500 ring-4 ring-blue-200 shadow-blue-300" 
-                    : "h-14 w-14 bg-white ring-1 ring-slate-200 mt-3"}
+                    : "h-14 w-14 bg-card ring-1 ring-border mt-3"}
                 `}
               >
                 {/* Efeito Glow atrás do ícone ativo */}
@@ -169,14 +169,14 @@ export function AboutStep() {
                 )}
                 
                 <Icon 
-                  className={`relative z-10 transition-all duration-200 ${isCharged ? "h-8 w-8 text-white" : "h-6 w-6 text-slate-400"}`} 
+                  className={`relative z-10 transition-all duration-200 ${isCharged ? "h-8 w-8 text-white" : "h-6 w-6 text-muted-foreground"}`} 
                 />
               </div>
 
-              <h3 className={`mt-5 font-bold transition-all duration-200 ${isCharged ? "text-lg text-slate-900" : "text-sm text-slate-500"}`}>
+              <h3 className={`mt-5 font-bold transition-all duration-200 ${isCharged ? "text-lg text-foreground" : "text-sm text-muted-foreground"}`}>
                 {step.name}
               </h3>
-              <p className={`mt-2 text-center transition-all duration-200 ${isCharged ? "text-sm text-slate-600 max-w-[180px]" : "text-xs text-slate-400 max-w-[140px]"}`}>
+              <p className={`mt-2 text-center transition-all duration-200 ${isCharged ? "text-sm text-muted-foreground max-w-[180px]" : "text-xs text-muted-foreground/70 max-w-[140px]"}`}>
                 {step.description}
               </p>
             </div>

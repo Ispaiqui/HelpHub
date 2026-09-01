@@ -140,13 +140,13 @@ export function Services() {
   }, [api]);
 
   return (
-    <section id="servicos" className="bg-blue-50 py-24 sm:py-32 overflow-hidden">
+    <section id="servicos" className="bg-slate-50 dark:bg-muted py-24 sm:py-32 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             O que vendemos
           </h2>
-          <p className="mt-4 text-lg leading-8 text-slate-600">
+          <p className="mt-4 text-lg leading-8 text-muted-foreground">
             Explore nossos produtos. Clique em qualquer card para conhecer os detalhes e o que está incluso.
           </p>
         </div>
@@ -174,16 +174,16 @@ export function Services() {
                       }}
                       className={`group w-full h-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-2xl transition-all duration-300 ${isSelected ? "scale-105 opacity-100 z-10 relative" : "scale-95 opacity-70"}`}
                     >
-                      <div className="relative flex flex-col h-full min-h-[380px] overflow-hidden rounded-2xl bg-white hover:bg-blue-50 shadow-md ring-1 ring-slate-200 transition-colors duration-300">
+                      <div className="relative flex flex-col h-full min-h-[380px] overflow-hidden rounded-2xl bg-white dark:bg-card shadow-md ring-1 ring-slate-200 dark:ring-border hover:shadow-lg hover:ring-primary/30 transition-all duration-300">
                         {/* Gradient header */}
                         <div className={`h-32 bg-gradient-to-br ${product.color} flex items-center justify-center shrink-0`}>
                           <Icon className="h-14 w-14 text-white opacity-90" />
                         </div>
                         <div className="p-6 flex flex-col flex-1">
-                          <h3 className="text-lg font-bold text-slate-900 group-hover:text-primary transition-colors">
+                          <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                             {product.title}
                           </h3>
-                          <p className="mt-1 text-sm text-slate-500 flex-1">{product.subtitle}</p>
+                          <p className="mt-1 text-sm text-muted-foreground flex-1">{product.subtitle}</p>
                           <div className="mt-4 flex items-center text-sm font-medium text-primary">
                             Ver detalhes
                             <ChevronRight className="ml-1 h-4 w-4" />
@@ -195,8 +195,8 @@ export function Services() {
                 );
               })}
             </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex -left-5" />
-            <CarouselNext className="hidden sm:flex -right-5" />
+            <CarouselPrevious className="hidden sm:flex" />
+            <CarouselNext className="hidden sm:flex" />
           </Carousel>
         </div>
 

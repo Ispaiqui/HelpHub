@@ -18,7 +18,7 @@ export function Hero() {
               <ChevronRight className="ml-1 h-4 w-4" />
             </span>
           </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl">
             Você cuida do seu negócio. <br className="hidden md:block" />
             <span className="">
                <span className="relative inline-block">
@@ -27,7 +27,7 @@ export function Hero() {
               </span> cuida da tecnologia.
             </span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
             Ajudamos pequenos e médios negócios a organizar, digitalizar e automatizar suas operações. 
             Nossa missão é simplificar a tecnologia para que você não precise de conhecimento técnico para crescer.
           </p>
