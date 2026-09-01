@@ -8,7 +8,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-8">
           {/* Brand & Info */}
           <div className="md:col-span-1">
-            <Link href="/helphub" className="flex items-center space-x-2 mb-4">
+            <Link href="/" className="flex items-center space-x-2 mb-4">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <span className="font-bold text-white text-xl">H</span>
               </div>
@@ -24,17 +24,17 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4 text-lg">Links Rápidos</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/helphub#sobre" className="hover:text-primary transition-colors">
+                <Link href="/#sobre" className="hover:text-primary transition-colors">
                   O que é
                 </Link>
               </li>
               <li>
-                <Link href="/helphub#visao" className="hover:text-primary transition-colors">
+                <Link href="/#visao" className="hover:text-primary transition-colors">
                   Nossa Visão
                 </Link>
               </li>
               <li>
-                <Link href="/helphub#servicos" className="hover:text-primary transition-colors">
+                <Link href="/#servicos" className="hover:text-primary transition-colors">
                   Serviços
                 </Link>
               </li>

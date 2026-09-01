@@ -14,10 +14,10 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const navLinks = [
-  { name: "Início", href: "/helphub" },
-  { name: "O que é", href: "/helphub#sobre" },
-  { name: "Visão", href: "/helphub#visao" },
-  { name: "Serviços", href: "/helphub#servicos" },
+  { name: "Início", href: "/" },
+  { name: "O que é", href: "/#sobre" },
+  { name: "Visão", href: "/#visao" },
+  { name: "Serviços", href: "/#servicos" },
 ];
 
 export function Header() {
@@ -33,7 +33,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-[69px] items-center justify-between px-4 sm:px-6 lg:px-8 relative">
         <div className="flex items-center gap-2">
-          <Link href="/helphub" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
               <span className="font-bold text-white text-2xl">H</span>
             </div>
