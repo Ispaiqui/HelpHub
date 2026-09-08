@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/helphub/header";
 import { Footer } from "@/components/helphub/footer";
 import { LoadingSystem } from "@/components/helphub/loading-system";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -22,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-br" suppressHydrationWarning className={`scroll-smooth ${inter.variable}`}>
+    <html lang="pt-br" suppressHydrationWarning className={`scroll-smooth ${jetbrainsMono.variable}`}>
       {/* PT-BR: LoadingSystem encapsula toda a aplicação para interceptar
           cliques em links e exibir a tela de carregamento.
           FEATURE FUTURA: Substituir por integração com eventos reais de rota. */}
