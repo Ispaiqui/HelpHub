@@ -22,6 +22,8 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { ServiceDialog } from "./service-dialog";
+import { cn } from "@/lib/utils";
+import * as responsive from "@/lib/responsive";
 
 export type Product = {
   id: string;
@@ -40,7 +42,7 @@ const products: Product[] = [
     title: "Landing Pages",
     subtitle: "Converta visitantes em clientes",
     icon: Globe,
-    color: "from-blue-500 to-blue-700",
+    color: "from-hh-blue-500 to-hh-blue-700",
     description:
       "Uma landing page focada em conversão é a porta de entrada do seu negócio no digital. Criamos páginas rápidas, bonitas e otimizadas para transformar visitantes em clientes reais.",
     features: [
@@ -57,7 +59,7 @@ const products: Product[] = [
     title: "Sites Institucionais",
     subtitle: "Sua empresa com presença profissional",
     icon: Store,
-    color: "from-indigo-500 to-indigo-700",
+    color: "from-hh-blue-400 to-hh-blue-800",
     description:
       "Um site institucional transmite credibilidade e permite que clientes conheçam sua empresa, seus serviços e entre em contato facilmente. Desenvolvemos sites completos com identidade visual e múltiplas páginas.",
     features: [
@@ -74,7 +76,7 @@ const products: Product[] = [
     title: "Catálogos & Cardápios",
     subtitle: "Seus produtos sempre atualizados",
     icon: Smartphone,
-    color: "from-sky-500 to-sky-700",
+    color: "from-hh-blue-300 to-hh-blue-700",
     description:
       "Chega de imprimir catálogos desatualizados! Desenvolvemos catálogos e cardápios digitais acessíveis via link ou QR Code, que você mesmo pode atualizar quando quiser, pelo celular.",
     features: [
@@ -91,7 +93,7 @@ const products: Product[] = [
     title: "Integrações",
     subtitle: "WhatsApp, Formulários e Google Maps",
     icon: MessageCircle,
-    color: "from-cyan-500 to-cyan-700",
+    color: "from-hh-blue-200 to-hh-blue-600",
     description:
       "Conecte seu site com as ferramentas que seu cliente já usa. Botão de WhatsApp, formulários de contato, localização no Google Maps e muito mais para facilitar o contato e aumentar as conversões.",
     features: [
@@ -108,7 +110,7 @@ const products: Product[] = [
     title: "SEO & Manutenção",
     subtitle: "Apareça no Google e fique no ar",
     icon: Search,
-    color: "from-blue-600 to-blue-900",
+    color: "from-hh-blue-600 to-hh-blue-900",
     description:
       "De nada adianta ter um site bonito que ninguém encontra. Aplicamos técnicas de SEO básico para que sua empresa apareça nas buscas do Google e oferecemos planos de manutenção para manter tudo funcionando.",
     features: [
@@ -140,10 +142,10 @@ export function Services() {
   }, [api]);
 
   return (
-    <section id="servicos" className="bg-slate-50 dark:bg-muted py-24 sm:py-32 overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="servicos" className={cn("relative overflow-hidden", responsive.sectionPy)}>
+      <div className={responsive.container}>
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h2 className={cn(responsive.sectionHeading, "text-foreground")}>
             O que vendemos
           </h2>
           <p className="mt-4 text-lg leading-8 text-muted-foreground">
@@ -151,7 +153,7 @@ export function Services() {
           </p>
         </div>
 
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-5xl xl:max-w-6xl">
           <Carousel
             setApi={setApi}
             opts={{ align: "center", loop: true }}
@@ -165,7 +167,7 @@ export function Services() {
                 return (
                   <CarouselItem
                     key={product.id}
-                    className="pl-4 basis-11/12 sm:basis-1/2 lg:basis-1/3"
+                    className={cn("pl-4", responsive.carouselItemBasis)}
                   >
                     <button
                       onClick={() => {
@@ -195,8 +197,8 @@ export function Services() {
                 );
               })}
             </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex" />
-            <CarouselNext className="hidden sm:flex" />
+            <CarouselPrevious className={responsive.carouselNav} />
+            <CarouselNext className={responsive.carouselNav} />
           </Carousel>
         </div>
 
