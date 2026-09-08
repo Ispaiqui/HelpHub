@@ -1,15 +1,18 @@
+import { AnimatedBackground } from "@/components/helphub/animated-background";
 import { Hero } from "@/components/helphub/hero";
 import { AboutVision } from "@/components/helphub/about-vision";
 import { Services } from "@/components/helphub/services";
 import { Differential } from "@/components/helphub/differential";
 
 export default function HelpHubPage() {
+  // PT-BR: o <main> vem do RootLayout — esta página devolve apenas as seções.
   return (
-    <main className="flex min-h-screen flex-col bg-background">
+    <>
+      <AnimatedBackground />
       <Hero />
       <AboutVision />
       <Services />
       <Differential />
-    </main>
+    </>
   );
 }

@@ -12,6 +12,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { cn } from "@/lib/utils";
+import * as responsive from "@/lib/responsive";
 
 const navLinks = [
   { name: "Início", href: "/" },
@@ -30,19 +32,19 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-[69px] items-center justify-between px-4 sm:px-6 lg:px-8 relative">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70">
+      <div className={cn(responsive.container, "flex h-[69px] items-center justify-between relative")}>
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
               <span className="font-bold text-white text-2xl">H</span>
             </div>
-            <span className="font-bold text-2xl text-foreground tracking-tight">HelpHub</span>
+            <span className="font-bold text-xl text-foreground tracking-[-0.06em]">HelpHub</span>
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+        {/* ≥md: desktop nav */}
+        <nav className={cn(responsive.navDesktop, "items-center gap-8 absolute left-1/2 -translate-x-1/2")}>
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -54,7 +56,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className={cn(responsive.navDesktop, "items-center gap-4")}>
           <ThemeToggle />
           <Button variant="outline" className="rounded-full" onClick={() => router.push("#contato")}>
             Contato
@@ -64,29 +66,41 @@ export function Header() {
           </Button>
         </div>
 
-        {/* Mobile Navigation (Sidebar) */}
-        <div className="md:hidden">
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsOpen(true)}>
+        {/* <md: drawer */}
+        <div className={responsive.navMobile}>
+          <Button variant="ghost" size="icon" className={responsive.navMobile} onClick={() => setIsOpen(true)}>
             <Menu className="h-6 w-6" />
             <span className="sr-only">Abrir menu</span>
           </Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+            <SheetContent side="right" className="w-[300px] sm:w-[400px] p-6">
               <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
-              <div className="flex flex-col gap-6 py-6 mt-6">
-                {navLinks.map((link) => (
-                  <button
-                    key={link.name}
-                    onClick={() => handleNav(link.href)}
-                    className="text-left text-lg font-medium text-foreground transition-all duration-200 hover:text-primary hover:-translate-y-0.5"
+              <div className="flex h-full flex-col">
+                <div className="flex items-center justify-between border-b border-border/40 pb-6 pr-10">
+                  <Link
+                    href="/"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-2"
                   >
-                    {link.name}
-                  </button>
-                ))}
-                <div className="flex flex-col gap-3 mt-4 border-t pt-6">
-                  <div className="flex justify-center mb-2">
-                    <ThemeToggle />
-                  </div>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+                      <span className="font-bold text-white text-2xl">H</span>
+                    </div>
+                    <span className="font-bold text-xl text-foreground tracking-[-0.06em]">HelpHub</span>
+                  </Link>
+                  <ThemeToggle />
+                </div>
+                <nav className="mt-2 flex flex-col divide-y divide-border/40">
+                  {navLinks.map((link) => (
+                    <button
+                      key={link.name}
+                      onClick={() => handleNav(link.href)}
+                      className="py-5 text-left text-lg font-medium text-foreground transition-all duration-200 hover:text-primary hover:-translate-y-0.5"
+                    >
+                      {link.name}
+                    </button>
+                  ))}
+                </nav>
+                <div className="mt-8 flex flex-col gap-5 border-t border-border/40 pt-6">
                   <Button variant="outline" className="w-full justify-center" onClick={() => handleNav("#contato")}>
                     Contato
                   </Button>
