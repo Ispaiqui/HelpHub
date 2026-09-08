@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search, Lightbulb, Code, Headphones, AlertTriangle, LucideIcon } from "lucide-react";
 
 export interface StepItem {
@@ -17,181 +17,228 @@ const steps: StepItem[] = [
   { name: "Suporte", description: "5. Acompanhamos você", icon: Headphones },
 ];
 
-const getStepClasses = (i: number, activeIndex: number, phase: string, stepsCount: number) => {
+const SLIDE_MS = 700;
+const ENERGY_MS = 500;
+const CHARGE_MS = 180;
+const HOLD_MS = 2200;
+const EASE = "ease-[cubic-bezier(0.22,1,0.36,1)]";
+const MOVE = `transition-[transform,opacity] duration-700 ${EASE}`;
+const CHARGE = `transition-[background-color,box-shadow,color,opacity,ring-color,ring-width] duration-200 ${EASE}`;
+
+/** Slots posicionais definidos em globals.css (.hh-steps__card--*): cada um
+ *  desloca o card em múltiplos da própria largura, nunca da largura do palco. */
+const SLOT = {
+  farLeft: "hh-steps__card--far-left",
+  left: "hh-steps__card--left",
+  center: "hh-steps__card--center",
+  right: "hh-steps__card--right",
+  farRight: "hh-steps__card--far-right",
+} as const;
+
+type Phase = "idle" | "energy" | "charged" | "sliding";
+
+const getStepClasses = (
+  i: number,
+  activeIndex: number,
+  phase: Phase,
+  frozen: boolean,
+  stepsCount: number,
+) => {
   const nextIndex = (activeIndex + 1) % stepsCount;
   const prevIndex = (activeIndex - 1 + stepsCount) % stepsCount;
   const nextNextIndex = (activeIndex + 2) % stepsCount;
+  const sliding = phase === "sliding";
+  const moveClass = frozen ? "transition-none" : MOVE;
 
-  // Far Right (escondido aguardando)
-  let posClass = "translate-x-[220px] sm:translate-x-[300px] md:translate-x-[400px] opacity-0 scale-75";
-  let transitionClass = "transition-all duration-500 ease-in-out";
+  let posClass: string = SLOT.farRight;
+  let transitionClass = "transition-none";
   let isCharged = false;
 
   if (i === activeIndex) {
-    if (phase === 'sliding') {
-      // Sai para a esquerda
-      posClass = "-translate-x-[140px] sm:-translate-x-[200px] md:-translate-x-[260px] opacity-50 scale-90";
-      isCharged = false;
-    } else if (phase === 'charged') {
-      // Começa a perder o foco antes de mover
-      posClass = "translate-x-0 opacity-50 scale-90 z-10";
-      isCharged = false;
-    } else {
-      // Centro (ativo)
-      posClass = "translate-x-0 opacity-100 scale-100 z-10";
-      isCharged = true;
-    }
+    transitionClass = moveClass;
+    posClass = sliding ? SLOT.left : SLOT.center;
+    isCharged = phase === "idle" || phase === "energy";
   } else if (i === nextIndex) {
-    if (phase === 'sliding') {
-      // Vem para o centro
-      posClass = "translate-x-0 opacity-100 scale-100 z-10";
-      isCharged = true;
-    } else if (phase === 'charged') {
-      // Recebe a carga de energia AINDA na direita (preenche na hora)
-      posClass = "translate-x-[140px] sm:translate-x-[200px] md:translate-x-[260px] opacity-100 scale-100 z-10";
-      isCharged = true;
-    } else {
-      // Fica visível na direita aguardando a energia
-      posClass = "translate-x-[140px] sm:translate-x-[200px] md:translate-x-[260px] opacity-50 scale-90";
-      isCharged = false;
-    }
+    transitionClass = moveClass;
+    posClass = sliding ? SLOT.center : SLOT.right;
+    isCharged = phase === "charged" || phase === "sliding";
   } else if (i === prevIndex) {
-    if (phase === 'sliding' || phase === 'charged') {
-      // Estava na esquerda, agora sai da tela totalmente (Far Left)
-      posClass = "-translate-x-[220px] sm:-translate-x-[300px] md:-translate-x-[400px] opacity-0 scale-75 pointer-events-none";
-      isCharged = false;
-    } else {
-      // Fica visível na esquerda
-      posClass = "-translate-x-[140px] sm:-translate-x-[200px] md:-translate-x-[260px] opacity-50 scale-90";
-      isCharged = false;
-    }
+    transitionClass = moveClass;
+    posClass = sliding ? SLOT.farLeft : SLOT.left;
   } else if (i === nextNextIndex) {
-    if (phase === 'sliding') {
-      // Estava escondido na direita, agora entra pra direita
-      posClass = "translate-x-[140px] sm:translate-x-[200px] md:translate-x-[260px] opacity-50 scale-90";
-      isCharged = false;
-    } else {
-      // Escondido na direita sem transição para não animar a volta
-      transitionClass = "transition-none";
-      posClass = "translate-x-[220px] sm:translate-x-[300px] md:translate-x-[400px] opacity-0 scale-75 pointer-events-none";
-      isCharged = false;
-    }
-  } else {
-    // Outros itens que não estão próximos ficam escondidos na direita
-    transitionClass = "transition-none";
-    posClass = "translate-x-[220px] sm:translate-x-[300px] md:translate-x-[400px] opacity-0 scale-75 pointer-events-none";
-    isCharged = false;
+    transitionClass = sliding && !frozen ? MOVE : "transition-none";
+    posClass = sliding ? SLOT.right : SLOT.farRight;
   }
 
   return { posClass, transitionClass, isCharged };
 };
 
 export function AboutStep() {
+  const stageRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [phase, setPhase] = useState<'idle' | 'energy' | 'charged' | 'sliding'>('idle');
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [frozen, setFrozen] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    let timeout1: NodeJS.Timeout;
-    let timeout2: NodeJS.Timeout;
-    let timeout3: NodeJS.Timeout;
-    
-    // Total cycle: 4 seconds
-    const interval = setInterval(() => {
-      // 1. Dispara a energia saindo do item central
-      setPhase('energy');
-      
-      // 2. A energia atinge o alvo na direita exatamente aos 800ms (ele se preenche)
-      timeout1 = setTimeout(() => {
-        setPhase('charged');
-      }, 800);
-      
-      // 3. Aos 1200ms (após ser preenchido), o ícone azul é puxado para o centro
-      timeout2 = setTimeout(() => {
-        setPhase('sliding');
-      }, 1200);
-      
-      // 4. Aos 1900ms (após o slide terminar), atualiza o índice oficial e volta ao repouso
-      timeout3 = setTimeout(() => {
-        setActiveIndex((prev) => (prev + 1) % steps.length);
-        setPhase('idle');
-      }, 1900);
-      
-    }, 4000);
-    
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    setReducedMotion(query.matches);
+
+    const onChange = (event: MediaQueryListEvent) => setReducedMotion(event.matches);
+    query.addEventListener("change", onChange);
+
+    return () => query.removeEventListener("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+
+    let inView = false;
+    let pageVisible = document.visibilityState === "visible";
+
+    const sync = () => {
+      setPlaying(inView && pageVisible);
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        sync();
+      },
+      { threshold: 0.2 },
+    );
+
+    const onVisibility = () => {
+      pageVisible = document.visibilityState === "visible";
+      sync();
+    };
+
+    io.observe(el);
+    document.addEventListener("visibilitychange", onVisibility);
+
     return () => {
-      clearInterval(interval);
-      clearTimeout(timeout1);
-      clearTimeout(timeout2);
-      clearTimeout(timeout3);
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, []);
 
-  return (
-    <div className="mt-10 select-none">
-      <div className="relative h-72 w-full flex items-center justify-center overflow-hidden rounded-3xl">
-        
-        {/* Linha contínua no fundo conectando os itens */}
-        <div className="absolute top-[100px] left-0 right-0 h-[2px] bg-border -translate-y-1/2" />
+  useEffect(() => {
+    // PT-BR: com "reduzir movimento" ativo a etapa atual fica estática,
+    // sem ciclo automático e sem transições.
+    if (!playing || reducedMotion) {
+      setFrozen(true);
+      setPhase("idle");
+      return;
+    }
 
-        {/* Trilha por onde a energia passa (do centro para a direita) */}
-        <div className="absolute top-[100px] left-1/2 h-[2px] w-[140px] sm:w-[200px] md:w-[260px] -translate-y-1/2">
-          {phase === 'energy' && (
-            <div className="absolute top-1/2 -translate-y-1/2 h-[4px] w-[60px] bg-gradient-to-r from-transparent via-blue-500 to-blue-300 shadow-[0_0_12px_rgba(59,130,246,0.8)] rounded-full animate-[energy-travel_800ms_ease-in-out_forwards]" />
-          )}
+    let cancelled = false;
+    let timers: ReturnType<typeof setTimeout>[] = [];
+    const later = (ms: number, fn: () => void) => {
+      timers.push(setTimeout(fn, ms));
+    };
+
+    const frame = requestAnimationFrame(() => {
+      if (cancelled) return;
+      setFrozen(false);
+    });
+
+    const cycle = () => {
+      if (cancelled) return;
+
+      // Todos os timers do ciclo anterior já dispararam neste ponto.
+      timers = [];
+
+      setPhase("energy");
+
+      later(ENERGY_MS, () => {
+        if (cancelled) return;
+        setPhase("charged");
+      });
+
+      later(ENERGY_MS + CHARGE_MS, () => {
+        if (cancelled) return;
+        setPhase("sliding");
+      });
+
+      later(ENERGY_MS + CHARGE_MS + SLIDE_MS, () => {
+        if (cancelled) return;
+        setActiveIndex((prev) => (prev + 1) % steps.length);
+        setPhase("idle");
+        later(HOLD_MS, cycle);
+      });
+    };
+
+    later(HOLD_MS, cycle);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+      timers.forEach(clearTimeout);
+    };
+  }, [playing, reducedMotion]);
+
+  return (
+    <div className="hh-steps mt-10 select-none px-2 sm:px-4">
+      <div
+        ref={stageRef}
+        className="hh-steps__stage min-h-[280px] sm:min-h-[300px]"
+      >
+        <div className="hh-steps__rail" />
+
+        <div className="hh-steps__beam-track">
+          {phase === "energy" && <div className="hh-steps__beam" />}
         </div>
 
-        {/* Passos / Cards */}
         {steps.map((step, i) => {
-          const { posClass, transitionClass, isCharged } = getStepClasses(i, activeIndex, phase, steps.length);
+          const { posClass, transitionClass, isCharged } = getStepClasses(
+            i,
+            activeIndex,
+            phase,
+            frozen,
+            steps.length,
+          );
           const Icon = step.icon;
 
           return (
             <div
               key={step.name}
-              className={`absolute inset-0 flex flex-col items-center pt-[60px] ${transitionClass} ${posClass}`}
+              className={`hh-steps__card ${transitionClass} ${posClass}`}
             >
-              <div 
+              <div
                 className={`
-                  relative flex items-center justify-center rounded-full transition-all duration-200 shadow-lg 
-                  ${isCharged 
-                    ? "h-20 w-20 bg-blue-500 ring-4 ring-blue-200 shadow-blue-300" 
-                    : "h-14 w-14 bg-card ring-1 ring-border mt-3"}
+                  relative flex h-20 w-20 items-center justify-center rounded-full shadow-lg
+                  ${CHARGE}
+                  ${isCharged
+                    ? "bg-hh-blue-500 ring-4 ring-hh-blue-200 shadow-hh-blue-300"
+                    : "bg-card ring-1 ring-border"}
                 `}
               >
-                {/* Efeito Glow atrás do ícone ativo */}
-                {isCharged && (
-                  <div className="absolute inset-0 rounded-full bg-blue-500/40 blur-xl scale-[1.5] animate-pulse pointer-events-none" />
-                )}
-                
-                {/* Fundo gradiente interno premium pro ícone carregado */}
-                {isCharged && (
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-600 to-blue-400" />
-                )}
-                
-                <Icon 
-                  className={`relative z-10 transition-all duration-200 ${isCharged ? "h-8 w-8 text-white" : "h-6 w-6 text-muted-foreground"}`} 
+                <div
+                  className={`absolute inset-0 rounded-full bg-hh-blue-500/40 blur-xl scale-[1.5] pointer-events-none ${CHARGE} ${isCharged ? "opacity-100 animate-pulse" : "opacity-0"}`}
+                />
+
+                <div
+                  className={`absolute inset-0 rounded-full bg-gradient-to-tr from-hh-blue-600 to-hh-blue-400 ${CHARGE} ${isCharged ? "opacity-100" : "opacity-0"}`}
+                />
+
+                <Icon
+                  className={`relative z-10 h-7 w-7 ${CHARGE} ${isCharged ? "text-white" : "text-muted-foreground"}`}
                 />
               </div>
 
-              <h3 className={`mt-5 font-bold transition-all duration-200 ${isCharged ? "text-lg text-foreground" : "text-sm text-muted-foreground"}`}>
+              <h3 className={`mt-5 text-base font-bold ${CHARGE} ${isCharged ? "text-foreground" : "text-muted-foreground"}`}>
                 {step.name}
               </h3>
-              <p className={`mt-2 text-center transition-all duration-200 ${isCharged ? "text-sm text-muted-foreground max-w-[180px]" : "text-xs text-muted-foreground/70 max-w-[140px]"}`}>
+              <p className={`mt-2 text-center text-sm leading-relaxed text-muted-foreground ${CHARGE} ${isCharged ? "opacity-100" : "opacity-70"}`}>
                 {step.description}
               </p>
             </div>
           );
         })}
       </div>
-
-      <style>{`
-        @keyframes energy-travel {
-          0% { left: 0%; opacity: 0; transform: translateX(0); }
-          10% { opacity: 1; }
-          95% { opacity: 1; }
-          100% { left: 100%; opacity: 0; transform: translateX(-100%); }
-        }
-      `}</style>
     </div>
   );
 }
