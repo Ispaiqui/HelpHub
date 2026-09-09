@@ -1,3 +1,4 @@
+import { AnimatedBackground } from "./animated-background";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -7,7 +8,8 @@ import * as responsive from "@/lib/responsive";
 
 export function Hero() {
   return (
-    <section className="relative pt-20 pb-28 sm:pt-24 sm:pb-32">
+    <section className="relative overflow-hidden bg-background pt-20 pb-28 sm:pt-24 sm:pb-32">
+      <AnimatedBackground />
       <div className={cn("relative z-10 text-center", responsive.container)}>
         <div className="mx-auto max-w-4xl">
           <h1 className={cn(responsive.heroTitle, "text-foreground")}>
