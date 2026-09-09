@@ -8,7 +8,7 @@ export function AboutVision() {
     <section
       id="sobre"
       className={cn(
-        "relative overflow-hidden border-y border-border/40 bg-muted/50 backdrop-blur-sm",
+        "relative overflow-hidden border-y border-border/40 bg-muted",
         responsive.sectionPy,
       )}
     >

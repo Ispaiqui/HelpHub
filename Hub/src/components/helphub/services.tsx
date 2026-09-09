@@ -142,7 +142,7 @@ export function Services() {
   }, [api]);
 
   return (
-    <section id="servicos" className={cn("relative overflow-hidden", responsive.sectionPy)}>
+    <section id="servicos" className={cn("relative overflow-hidden bg-background", responsive.sectionPy)}>
       <div className={responsive.container}>
         <div className="mx-auto max-w-2xl text-center mb-16">
           <h2 className={cn(responsive.sectionHeading, "text-foreground")}>
