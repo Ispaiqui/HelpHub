@@ -9,6 +9,9 @@
 @theme inline {
   --color-carousel-control: var(--carousel-control, var(--hh-blue-600));
   --color-carousel-control-foreground: var(--carousel-control-foreground, var(--hh-white));
+  --color-paper: #f7f7f5;
+  --color-ink: #0c0c0c;
+  --color-line: #d2d2cf;
 }
 
 :root {

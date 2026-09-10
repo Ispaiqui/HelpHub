@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" fill="none">
+  <rect width="640" height="480" fill="#161615"/>
+  <path d="M40 40H600V440H40Z" stroke="#73736f" stroke-width="1"/>
+  <path d="M40 160H600" stroke="#3a3a38"/>
+  <path d="M40 280H600" stroke="#3a3a38"/>
+  <path d="M180 40V440" stroke="#3a3a38"/>
+  <path d="M320 40V440" stroke="#73736f"/>
+  <path d="M460 40V440" stroke="#3a3a38"/>
+  <circle cx="320" cy="240" r="6" fill="#f7f7f5"/>
+  <path d="M320 88L332 124H308L320 88Z" fill="#f7f7f5"/>
+  <text x="320" y="80" text-anchor="middle" fill="#f7f7f5" font-family="ui-monospace, monospace" font-size="12" letter-spacing="4">N</text>
+  <text x="56" y="420" fill="#a8a8a4" font-family="ui-monospace, monospace" font-size="11" letter-spacing="2">REGIÕES</text>
+</svg>
