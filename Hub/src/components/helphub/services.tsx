@@ -142,7 +142,7 @@ export function Services() {
   }, [api]);
 
   return (
-    <section id="servicos" className={cn("relative overflow-hidden bg-background", responsive.sectionPy)}>
+    <section id="servicos" className={cn("relative bg-background", responsive.sectionPy)}>
       <div className={responsive.container}>
         <div className="mx-auto max-w-2xl text-center mb-16">
           <h2 className={cn(responsive.sectionHeading, "text-foreground")}>
@@ -159,7 +159,7 @@ export function Services() {
             opts={{ align: "center", loop: true }}
             className="w-full"
           >
-            <CarouselContent className="-ml-4 py-8">
+            <CarouselContent className="-ml-4 py-10">
               {products.map((product, index) => {
                 const Icon = product.icon;
                 const isSelected = index === current;

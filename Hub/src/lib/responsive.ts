@@ -22,9 +22,9 @@ export const navDesktop = "hidden md:flex";
 
 export const navMobile = "md:hidden";
 
-export const carouselItemBasis = "basis-11/12 md:basis-1/2 lg:basis-1/3";
+export const carouselItemBasis = "basis-1/2 lg:basis-1/3";
 
-export const carouselNav = "hidden md:flex";
+export const carouselNav = "flex";
 
 export const heroTitle =
   "text-3xl font-extrabold tracking-[-0.04em] sm:text-4xl md:text-5xl xl:text-6xl";
