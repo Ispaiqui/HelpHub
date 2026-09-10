@@ -39,12 +39,18 @@
   }
 }
 
-/* LP neutra: cinza/preto/branco, sem identidade HelpHub. */
+/* LP neutra: cinza/preto/branco, sem identidade HelpHub.
+   Tailwind gray padrão (e lab() no @supports) puxa azul-frio.
+   Regras de classe batem utilitários com especificidade maior. */
 .hh-lp {
   color-scheme: light;
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: #f7f7f5;
+  color: #0c0c0c;
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --primary: #0c0c0c;
+  --primary-hover: #242422;
+  --primary-foreground: #f7f7f5;
+  --ring: #0c0c0c;
   --color-gray-50: #f3f3f1;
   --color-gray-100: #e8e8e6;
   --color-gray-200: #d2d2cf;
@@ -54,6 +60,52 @@
   --color-gray-600: #3a3a38;
   --color-gray-700: #242422;
   --color-gray-800: #161615;
+  --color-gray-900: #161615;
+  --color-gray-950: #0c0c0c;
+}
+
+.hh-lp .bg-gray-50 {
+  background-color: #f3f3f1;
+}
+
+.hh-lp .text-gray-200 {
+  color: #d2d2cf;
+}
+
+.hh-lp .text-gray-300 {
+  color: #a8a8a4;
+}
+
+.hh-lp .text-gray-400 {
+  color: #73736f;
+}
+
+.hh-lp .text-gray-500 {
+  color: #555552;
+}
+
+.hh-lp .text-gray-600 {
+  color: #3a3a38;
+}
+
+.hh-lp .text-gray-700 {
+  color: #242422;
+}
+
+.hh-lp .hover\:bg-gray-50:hover {
+  background-color: #f3f3f1;
+}
+
+.hh-lp .hover\:bg-gray-100:hover {
+  background-color: #e8e8e6;
+}
+
+.hh-lp .hover\:bg-gray-700:hover {
+  background-color: #242422;
+}
+
+.hh-lp .hover\:text-gray-700:hover {
+  color: #242422;
 }
 
 .hh-lp .font-serif {
