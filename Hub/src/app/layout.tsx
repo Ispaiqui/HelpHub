@@ -3,7 +3,6 @@ import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/helphub/header";
 import { Footer } from "@/components/helphub/footer";
-import { LoadingSystem } from "@/components/helphub/loading-system";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -24,9 +23,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br" suppressHydrationWarning className={`scroll-smooth ${jetbrainsMono.variable}`}>
-      {/* PT-BR: LoadingSystem encapsula toda a aplicação para interceptar
-          cliques em links e exibir a tela de carregamento.
-          FEATURE FUTURA: Substituir por integração com eventos reais de rota. */}
+      {/* FEATURE FUTURA: Sistema de tela de carregamento ao navegar (overlay +
+          interceptação de cliques / eventos de rota). Componentes removidos
+          por enquanto; estilos preservados comentados em globals.css. */}
       <body className="min-h-full flex flex-col antialiased font-sans">
         <ThemeProvider
           attribute="class"
@@ -34,13 +33,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <LoadingSystem>
-            <Header />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </LoadingSystem>
+          <Header />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
