@@ -4,6 +4,23 @@
 @import "@helphub/design-system/tokens.css";
 @import "@helphub/design-system/theme.css";
 
+/* Token de seta do carrossel: fonte no design system.
+   Espelho local até o pacote publicado incluir --carousel-control. */
+@theme inline {
+  --color-carousel-control: var(--carousel-control, var(--hh-blue-600));
+  --color-carousel-control-foreground: var(--carousel-control-foreground, var(--hh-white));
+}
+
+:root {
+  --carousel-control: var(--hh-blue-600);
+  --carousel-control-foreground: var(--hh-white);
+}
+
+.dark {
+  --carousel-control: var(--hh-blue-500);
+  --carousel-control-foreground: var(--hh-white);
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
