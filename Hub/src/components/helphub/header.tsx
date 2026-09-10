@@ -18,7 +18,7 @@ import * as responsive from "@/lib/responsive";
 const navLinks = [
   { name: "Início", href: "/" },
   { name: "O que é", href: "/#sobre" },
-  { name: "Visão", href: "/#visao" },
+  { name: "Demonstrações", href: "/demonstracoes" },
   { name: "Serviços", href: "/#servicos" },
 ];
 
