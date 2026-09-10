@@ -20,7 +20,7 @@ const steps: StepItem[] = [
 const SLIDE_MS = 700;
 const ENERGY_MS = 500;
 const CHARGE_MS = 180;
-const HOLD_MS = 2200;
+const HOLD_MS = 4000;
 const EASE = "ease-[cubic-bezier(0.22,1,0.36,1)]";
 const MOVE = `transition-[transform,opacity] duration-700 ${EASE}`;
 const CHARGE = `transition-[background-color,box-shadow,color,opacity,ring-color,ring-width] duration-200 ${EASE}`;
@@ -209,17 +209,13 @@ export function AboutStep() {
             >
               <div
                 className={`
-                  relative flex h-20 w-20 items-center justify-center rounded-full shadow-lg
+                  relative z-[1] flex h-20 w-20 items-center justify-center overflow-hidden rounded-full
                   ${CHARGE}
                   ${isCharged
-                    ? "bg-hh-blue-500 ring-4 ring-hh-blue-200 shadow-hh-blue-300"
-                    : "bg-card ring-1 ring-border"}
+                    ? "bg-hh-blue-500 shadow-md"
+                    : "bg-card ring-1 ring-border shadow-lg"}
                 `}
               >
-                <div
-                  className={`absolute inset-0 rounded-full bg-hh-blue-500/40 blur-xl scale-[1.5] pointer-events-none ${CHARGE} ${isCharged ? "opacity-100 animate-pulse" : "opacity-0"}`}
-                />
-
                 <div
                   className={`absolute inset-0 rounded-full bg-gradient-to-tr from-hh-blue-600 to-hh-blue-400 ${CHARGE} ${isCharged ? "opacity-100" : "opacity-0"}`}
                 />
