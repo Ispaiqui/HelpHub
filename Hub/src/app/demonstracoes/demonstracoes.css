@@ -1,0 +1,86 @@
+.hh-in {
+  animation: hh-demo-fade-up 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hh-in-d1 {
+  animation-delay: 80ms;
+}
+
+.hh-in-d2 {
+  animation-delay: 160ms;
+}
+
+.hh-in-d3 {
+  animation-delay: 240ms;
+}
+
+.hh-in-d4 {
+  animation-delay: 320ms;
+}
+
+@keyframes hh-demo-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hh-in,
+  .hh-in-d1,
+  .hh-in-d2,
+  .hh-in-d3,
+  .hh-in-d4 {
+    animation: none;
+  }
+}
+
+/* LP neutra: cinza/preto/branco, sem identidade HelpHub. */
+.hh-lp {
+  color-scheme: light;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --color-gray-50: #f3f3f1;
+  --color-gray-100: #e8e8e6;
+  --color-gray-200: #d2d2cf;
+  --color-gray-300: #a8a8a4;
+  --color-gray-400: #73736f;
+  --color-gray-500: #555552;
+  --color-gray-600: #3a3a38;
+  --color-gray-700: #242422;
+  --color-gray-800: #161615;
+}
+
+.hh-lp .font-serif {
+  font-family: var(--font-instrument), ui-serif, Georgia, serif;
+}
+
+.hh-lp .font-mono {
+  font-family: var(--font-plex), ui-monospace, monospace;
+}
+
+.hh-lp .label {
+  font-family: var(--font-plex), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.hh-lp ::selection {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.hh-demos .label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
