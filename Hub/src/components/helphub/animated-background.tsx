@@ -82,9 +82,10 @@ function readPalette(el: HTMLElement) {
   const styles = getComputedStyle(el);
   const dark = document.documentElement.classList.contains("dark");
   return {
-    primary: parseCssColor(styles.getPropertyValue("--primary")),
-    accent: parseCssColor(styles.getPropertyValue("--hh-blue-400")),
-    gain: dark ? 1 : 0.42,
+    primary: parseCssColor(styles.getPropertyValue(dark ? "--primary" : "--hh-blue-1000")),
+    accent: parseCssColor(styles.getPropertyValue(dark ? "--hh-blue-400" : "--hh-blue-1000")),
+    gain: dark ? 1 : 0.62,
+    additive: dark,
   };
 }
 
@@ -297,9 +298,9 @@ export function AnimatedBackground() {
 
     const paint = (animate: boolean, dt: number) => {
       ctx.clearRect(0, 0, width, height);
-      ctx.globalCompositeOperation = "lighter";
 
-      const { primary, accent, gain } = palette;
+      const { primary, accent, gain, additive } = palette;
+      ctx.globalCompositeOperation = additive ? "lighter" : "source-over";
 
       if (animate) {
         if (hasPointer) {
