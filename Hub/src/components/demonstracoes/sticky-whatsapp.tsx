@@ -6,14 +6,17 @@ import { cn } from "@/lib/utils";
 
 type StickyWhatsAppProps = {
   variant: "bar" | "float";
+  message?: string;
 };
 
-export function StickyWhatsApp({ variant }: StickyWhatsAppProps) {
+export function StickyWhatsApp({ variant, message }: StickyWhatsAppProps) {
+  const href = whatsappHref(message);
+
   if (variant === "bar") {
     return (
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 p-4 sm:hidden">
         <a
-          href={whatsappHref()}
+          href={href}
           target="_blank"
           rel="noopener noreferrer"
           className="flex h-12 items-center justify-center gap-2 bg-ink text-sm font-medium text-paper"
@@ -27,7 +30,7 @@ export function StickyWhatsApp({ variant }: StickyWhatsAppProps) {
 
   return (
     <a
-      href={whatsappHref()}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       className={cn(

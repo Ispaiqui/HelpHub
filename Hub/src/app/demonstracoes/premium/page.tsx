@@ -14,10 +14,13 @@ import {
 import { StickyWhatsApp } from "@/components/demonstracoes/sticky-whatsapp";
 import { WhatsAppLink } from "@/components/demonstracoes/whatsapp-link";
 import {
+  demoWhatsappMessages,
   faqsPremium,
   offerItems,
   proofPoints,
   testimonial,
+  whatsappHref,
+  whatsappNumber,
 } from "@/lib/demonstracoes/content";
 
 export const metadata: Metadata = {
@@ -90,11 +93,13 @@ export default function PremiumPage() {
               <p className="mt-4 font-serif text-2xl leading-tight sm:text-[1.75rem]">
                 Manda a região e o que você precisa.
               </p>
-              <WhatsAppLink variant="invert" className="mt-7 w-full" size="lg">
+              <WhatsAppLink variant="invert" className="mt-7 w-full" size="lg" message={demoWhatsappMessages.premiumPrimeiroChamado}>
                 WhatsApp
               </WhatsAppLink>
               <a
-                href="#contato"
+                href={whatsappHref(demoWhatsappMessages.premiumHeroContato)}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-4 inline-flex h-11 w-full items-center justify-center text-sm text-gray-300 underline-offset-4 hover:text-paper hover:underline"
               >
                 Contato
@@ -204,7 +209,7 @@ export default function PremiumPage() {
                 Valor da visita no WhatsApp. O que você precisa e o horário
                 mudam o trabalho — por isso não há tabela genérica nesta página.
               </p>
-              <WhatsAppLink className="mt-10" size="lg">
+              <WhatsAppLink className="mt-10" size="lg" message={demoWhatsappMessages.premiumOferta}>
                 WhatsApp
               </WhatsAppLink>
             </div>
@@ -250,15 +255,15 @@ export default function PremiumPage() {
           <div>
             <p className="font-serif text-4xl leading-none">Empresa</p>
             <p className="mt-4 text-sm leading-6 text-gray-400">
-              Demo HelpHub Premium · wa.me/5511999999999
+              Demo HelpHub Premium · wa.me/{whatsappNumber}
             </p>
           </div>
-          <WhatsAppLink variant="invert" size="lg">
+          <WhatsAppLink variant="invert" size="lg" message={demoWhatsappMessages.premiumFooter}>
             WhatsApp
           </WhatsAppLink>
         </div>
       </footer>
-      <StickyWhatsApp variant="float" />
+      <StickyWhatsApp variant="float" message={demoWhatsappMessages.premiumSticky} />
     </div>
   );
 }

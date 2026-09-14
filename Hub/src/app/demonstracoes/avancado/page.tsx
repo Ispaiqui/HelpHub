@@ -6,10 +6,12 @@ import { FadeUp, ProofCard } from "@/components/demonstracoes/motion/avancado-mo
 import { StickyWhatsApp } from "@/components/demonstracoes/sticky-whatsapp";
 import { WhatsAppLink } from "@/components/demonstracoes/whatsapp-link";
 import {
+  demoWhatsappMessages,
   neighborhoods,
   offerItems,
   proofPoints,
   testimonial,
+  whatsappNumber,
 } from "@/lib/demonstracoes/content";
 
 export const metadata: Metadata = {
@@ -61,7 +63,7 @@ export default function AvancadoPage() {
                 Atendimento para casa e comércio. Você descreve o que precisa.
                 A gente confirma a janela. Extra só com o seu ok.
               </p>
-              <WhatsAppLink className="mt-10" size="lg">
+              <WhatsAppLink className="mt-10" size="lg" message={demoWhatsappMessages.avancadoSolucao}>
                 WhatsApp
               </WhatsAppLink>
             </FadeUp>
@@ -183,7 +185,7 @@ export default function AvancadoPage() {
                 Respondemos no WhatsApp com horário. O formulário desta demo só
                 valida na tela.
               </p>
-              <WhatsAppLink variant="invert" className="mt-10" size="lg">
+              <WhatsAppLink variant="invert" className="mt-10" size="lg" message={demoWhatsappMessages.avancadoContato}>
                 WhatsApp
               </WhatsAppLink>
             </FadeUp>
@@ -195,9 +197,9 @@ export default function AvancadoPage() {
       </div>
 
       <footer className="border-t border-line px-5 py-10 text-center text-xs leading-5 text-gray-500 sm:px-8">
-        Empresa · demo HelpHub Avançado · wa.me/5511999999999
+        Empresa · demo HelpHub Avançado · wa.me/{whatsappNumber}
       </footer>
-      <StickyWhatsApp variant="float" />
+      <StickyWhatsApp variant="float" message={demoWhatsappMessages.avancadoSticky} />
     </div>
   );
 }
