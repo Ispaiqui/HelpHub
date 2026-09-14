@@ -3,6 +3,7 @@ import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/helphub/header";
 import { Footer } from "@/components/helphub/footer";
+import { FaviconTheme } from "@/components/helphub/favicon-theme";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -14,6 +15,12 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "HelpHub",
   description: "Uma HUB para o seu negócio.",
+  icons: {
+    icon: [
+      { url: "/brand/favicon-light.png", type: "image/png", media: "(prefers-color-scheme: light)" },
+      { url: "/brand/favicon-dark.png", type: "image/png", media: "(prefers-color-scheme: dark)" },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -33,6 +40,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <FaviconTheme />
           <Header />
           <main className="flex-1">
             {children}
