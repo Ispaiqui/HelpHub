@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import { whatsappHref } from "@/lib/whatsapp";
 import type { Product } from "./services";
 
 interface ServiceDialogProps {
@@ -46,9 +48,15 @@ export function ServiceDialog({ selected, onClose }: ServiceDialogProps) {
               ))}
             </ul>
 
-            <Button className="mt-8 w-full rounded-xl" size="lg" onClick={onClose}>
+            <a
+              href={whatsappHref(selected.whatsappMessage)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ size: "lg" }), "mt-8 w-full rounded-xl")}
+              onClick={onClose}
+            >
               {selected.cta}
-            </Button>
+            </a>
           </div>
         </DialogContent>
       )}

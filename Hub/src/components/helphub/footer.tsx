@@ -3,6 +3,7 @@ import { MessageCircle, Mail, MapPin } from "lucide-react";
 
 import { BrandMark } from "@/components/helphub/brand-mark";
 import * as responsive from "@/lib/responsive";
+import { WHATSAPP_DISPLAY, whatsappHref, whatsappMessages } from "@/lib/whatsapp";
 
 export function Footer() {
   return (
@@ -54,7 +55,7 @@ export function Footer() {
             <ul className="space-y-3 sm:space-y-4 text-sm sm:text-base">
               <li>
                 <a
-                  href="https://wa.me/5511999999999"
+                  href={whatsappHref(whatsappMessages.footer)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2.5 hover:text-primary transition-colors"
@@ -64,7 +65,7 @@ export function Footer() {
                   </span>
                   <span className="min-w-0 leading-snug">
                     <span className="block text-slate-500 text-xs">WhatsApp</span>
-                    (11) 99999-9999
+                    {WHATSAPP_DISPLAY}
                   </span>
                 </a>
               </li>
