@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -15,6 +15,9 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { BrandMark } from "@/components/helphub/brand-mark";
 import { cn } from "@/lib/utils";
 import * as responsive from "@/lib/responsive";
+import { whatsappHref, whatsappMessages } from "@/lib/whatsapp";
+
+const contatoHref = whatsappHref(whatsappMessages.headerContato);
 
 const HOME_PATHS = new Set(["/", "/helphub"]);
 const INICIO_HREF = "/#topo";
@@ -92,9 +95,14 @@ export function Header() {
 
         <div className={cn(responsive.navDesktop, "items-center gap-4")}>
           <ThemeToggle />
-          <Button variant="outline" className="rounded-full" onClick={() => router.push("#contato")}>
+          <a
+            href={contatoHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}
+          >
             Contato
-          </Button>
+          </a>
           <Button className="rounded-full" onClick={() => router.push("#servicos")}>
             Começar agora
           </Button>
@@ -133,9 +141,15 @@ export function Header() {
                   ))}
                 </nav>
                 <div className="mt-8 flex flex-col gap-5 border-t border-border/40 pt-6">
-                  <Button variant="outline" className="w-full justify-center" onClick={() => handleNav("#contato")}>
+                  <a
+                    href={contatoHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(buttonVariants({ variant: "outline" }), "w-full justify-center")}
+                    onClick={() => setIsOpen(false)}
+                  >
                     Contato
-                  </Button>
+                  </a>
                   <Button className="w-full justify-center" onClick={() => handleNav("#servicos")}>
                     Começar agora
                   </Button>

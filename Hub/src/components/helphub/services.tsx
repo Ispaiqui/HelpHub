@@ -24,6 +24,7 @@ import {
 import { ServiceDialog } from "./service-dialog";
 import { cn } from "@/lib/utils";
 import * as responsive from "@/lib/responsive";
+import { whatsappMessages } from "@/lib/whatsapp";
 
 export type Product = {
   id: string;
@@ -34,6 +35,7 @@ export type Product = {
   description: string;
   features: string[];
   cta: string;
+  whatsappMessage: string;
 };
 
 const products: Product[] = [
@@ -53,6 +55,7 @@ const products: Product[] = [
       "Entrega em até 5 dias",
     ],
     cta: "Quero minha Landing Page",
+    whatsappMessage: whatsappMessages.landingPages,
   },
   {
     id: "sites-institucionais",
@@ -70,6 +73,7 @@ const products: Product[] = [
       "Manutenção inclusa por 30 dias",
     ],
     cta: "Criar meu Site Institucional",
+    whatsappMessage: whatsappMessages.sitesInstitucionais,
   },
   {
     id: "catalogos-digitais",
@@ -87,6 +91,7 @@ const products: Product[] = [
       "Funciona sem app instalado",
     ],
     cta: "Quero meu Catálogo Digital",
+    whatsappMessage: whatsappMessages.catalogosDigitais,
   },
   {
     id: "integracoes",
@@ -104,6 +109,7 @@ const products: Product[] = [
       "Links para delivery (iFood, etc.)",
     ],
     cta: "Integrar meu negócio",
+    whatsappMessage: whatsappMessages.integracoes,
   },
   {
     id: "seo-manutencao",
@@ -121,6 +127,7 @@ const products: Product[] = [
       "Suporte técnico via WhatsApp",
     ],
     cta: "Melhorar meu posicionamento",
+    whatsappMessage: whatsappMessages.seoManutencao,
   },
 ];
 

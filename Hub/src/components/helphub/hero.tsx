@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import * as responsive from "@/lib/responsive";
+import { whatsappHref, whatsappMessages } from "@/lib/whatsapp";
 
 export function Hero() {
   return (
@@ -38,8 +39,10 @@ export function Hero() {
               Conhecer nossos serviços
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
-            <Link
-              href="#contato"
+            <a
+              href={whatsappHref(whatsappMessages.heroEspecialista)}
+              target="_blank"
+              rel="noopener noreferrer"
               className={buttonVariants({
                 variant: "outline",
                 size: "lg",
@@ -47,7 +50,7 @@ export function Hero() {
               })}
             >
               Falar com um especialista
-            </Link>
+            </a>
           </div>
         </div>
       </div>
