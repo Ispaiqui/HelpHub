@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MessageCircle, Mail, MapPin } from "lucide-react";
 
+import { BrandMark } from "@/components/helphub/brand-mark";
 import * as responsive from "@/lib/responsive";
 
 export function Footer() {
@@ -10,9 +11,7 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-3 lg:gap-8">
           <div className="col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center space-x-2 mb-3 sm:mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <span className="font-bold text-white text-xl">H</span>
-              </div>
+              <BrandMark className="h-8 w-8" />
               <span className="font-bold text-xl text-white tracking-[-0.06em]">HelpHub</span>
             </Link>
             <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-sm">
