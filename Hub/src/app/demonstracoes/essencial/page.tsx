@@ -4,7 +4,7 @@ import { DemoBadge } from "@/components/demonstracoes/demo-badge";
 import { FaqList } from "@/components/demonstracoes/faq-list";
 import { StickyWhatsApp } from "@/components/demonstracoes/sticky-whatsapp";
 import { WhatsAppLink } from "@/components/demonstracoes/whatsapp-link";
-import { benefits, faqsEssencial, testimonial } from "@/lib/demonstracoes/content";
+import { benefits, demoWhatsappMessages, faqsEssencial, testimonial, whatsappHref, whatsappNumber } from "@/lib/demonstracoes/content";
 
 export const metadata: Metadata = {
   title: "Empresa — Pacote Essencial",
@@ -40,9 +40,13 @@ export default function EssencialPage() {
               escrito. Sem enrolação.
             </p>
             <div className="hh-in hh-in-d3 mt-10 flex flex-col gap-3 sm:flex-row">
-              <WhatsAppLink size="lg">WhatsApp</WhatsAppLink>
+              <WhatsAppLink size="lg" message={demoWhatsappMessages.essencialHero}>
+                WhatsApp
+              </WhatsAppLink>
               <a
-                href="#contato"
+                href={whatsappHref(demoWhatsappMessages.essencialHeroContato)}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex h-12 items-center justify-center border border-ink px-6 text-sm font-medium transition-colors duration-200 hover:bg-ink hover:text-paper"
               >
                 Contato
@@ -79,7 +83,7 @@ export default function EssencialPage() {
                 </li>
               ))}
             </ul>
-            <WhatsAppLink className="hh-in hh-in-d3 mt-10" size="lg">
+            <WhatsAppLink className="hh-in hh-in-d3 mt-10" size="lg" message={demoWhatsappMessages.essencialBeneficios}>
               WhatsApp
             </WhatsAppLink>
           </div>
@@ -117,7 +121,7 @@ export default function EssencialPage() {
               telefone e o que você precisa.
             </p>
             <div className="mt-8">
-              <WhatsAppLink className="w-full sm:w-auto" size="lg">
+              <WhatsAppLink className="w-full sm:w-auto" size="lg" message={demoWhatsappMessages.essencialContato}>
                 WhatsApp
               </WhatsAppLink>
             </div>
@@ -127,9 +131,9 @@ export default function EssencialPage() {
       </div>
 
       <footer className="border-t border-line px-5 py-10 text-center text-xs leading-5 text-gray-500 sm:px-8">
-        Empresa · demo HelpHub Essencial · wa.me/5511999999999
+        Empresa · demo HelpHub Essencial · wa.me/{whatsappNumber}
       </footer>
-      <StickyWhatsApp variant="bar" />
+      <StickyWhatsApp variant="bar" message={demoWhatsappMessages.essencialSticky} />
     </div>
   );
 }

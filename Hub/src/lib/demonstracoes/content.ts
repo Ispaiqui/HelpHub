@@ -1,9 +1,36 @@
-export const whatsappNumber = "5511999999999";
+import { WHATSAPP_NUMBER, whatsappHref as buildWhatsappHref } from "@/lib/whatsapp";
 
-export const whatsappHref = (text?: string) => {
-  const message = text ?? "Olá. Quero mais informações.";
-  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-};
+export const whatsappNumber = WHATSAPP_NUMBER;
+
+export const whatsappHref = (text?: string) =>
+  buildWhatsappHref(text ?? "Olá. Quero mais informações.");
+
+export const demoWhatsappMessages = {
+  essencialHero: "Olá! Vi a demo Essencial no hero e quero agendar pelo WhatsApp.",
+  essencialHeroContato:
+    "Olá! Cliquei em Contato na demo Essencial e quero falar com a empresa.",
+  essencialBeneficios:
+    "Olá! Vi os benefícios da demo Essencial e quero contratar o serviço.",
+  essencialContato:
+    "Olá! Estou na seção de contato da demo Essencial e quero atendimento.",
+  essencialSticky: "Olá! Abri o WhatsApp pela barra da demo Essencial.",
+  plusHero: "Olá! Vi a demo Plus no hero e quero agendar pelo WhatsApp.",
+  plusHeroContato: "Olá! Cliquei em Contato na demo Plus e quero falar com a empresa.",
+  plusContato: "Olá! Estou na seção de contato da demo Plus e quero atendimento.",
+  plusSticky: "Olá! Abri o WhatsApp pela barra da demo Plus.",
+  avancadoSolucao:
+    "Olá! Vi a solução da demo Avançado e quero agendar pelo WhatsApp.",
+  avancadoContato:
+    "Olá! Estou na seção de contato da demo Avançado e quero atendimento.",
+  avancadoSticky: "Olá! Abri o WhatsApp pelo botão flutuante da demo Avançado.",
+  premiumPrimeiroChamado:
+    "Olá! Vi o primeiro chamado da demo Premium e quero falar sobre região e serviço.",
+  premiumHeroContato:
+    "Olá! Cliquei em Contato na demo Premium e quero falar com a empresa.",
+  premiumOferta: "Olá! Vi a oferta da demo Premium e quero o valor da visita no WhatsApp.",
+  premiumFooter: "Olá! Vi o rodapé da demo Premium e quero atendimento.",
+  premiumSticky: "Olá! Abri o WhatsApp pelo botão flutuante da demo Premium.",
+} as const;
 
 export const business = {
   name: "Empresa",
