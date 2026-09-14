@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -12,23 +12,58 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { BrandMark } from "@/components/helphub/brand-mark";
 import { cn } from "@/lib/utils";
 import * as responsive from "@/lib/responsive";
 
+const HOME_PATHS = new Set(["/", "/helphub"]);
+const INICIO_HREF = "/#topo";
+
 const navLinks = [
-  { name: "Início", href: "/" },
+  { name: "Início", href: INICIO_HREF },
   { name: "O que é", href: "/#sobre" },
-  { name: "Demonstrações", href: "/demonstracoes" },
   { name: "Serviços", href: "/#servicos" },
+  { name: "Demonstrações", href: "/demonstracoes" },
 ];
+
+function isHomePath(pathname: string) {
+  return HOME_PATHS.has(pathname);
+}
+
+function scrollToPageTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  const nextUrl = `${window.location.pathname}${window.location.search}#topo`;
+  if (`${window.location.pathname}${window.location.search}${window.location.hash}` !== nextUrl) {
+    history.replaceState(null, "", nextUrl);
+  }
+}
 
 export function Header() {
   const [isOpen, setIsOpen] = React.useState(false);
+  const pathname = usePathname();
   const router = useRouter();
+
+  const goToInicio = () => {
+    if (isHomePath(pathname)) {
+      scrollToPageTop();
+      return;
+    }
+    router.push(INICIO_HREF);
+  };
 
   const handleNav = (href: string) => {
     setIsOpen(false);
+    if (href === INICIO_HREF) {
+      goToInicio();
+      return;
+    }
     router.push(href);
+  };
+
+  const handleInicioClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isHomePath(pathname)) return;
+    event.preventDefault();
+    scrollToPageTop();
   };
 
   return (
@@ -36,9 +71,7 @@ export function Header() {
       <div className={cn(responsive.container, "flex h-[69px] items-center justify-between relative")}>
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-              <span className="font-bold text-white text-2xl">H</span>
-            </div>
+            <BrandMark priority />
             <span className="font-bold text-xl text-foreground tracking-[-0.06em]">HelpHub</span>
           </Link>
         </div>
@@ -49,6 +82,7 @@ export function Header() {
             <Link
               key={link.name}
               href={link.href}
+              onClick={link.href === INICIO_HREF ? handleInicioClick : undefined}
               className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
             >
               {link.name}
@@ -82,9 +116,7 @@ export function Header() {
                     onClick={() => setIsOpen(false)}
                     className="flex items-center gap-2"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                      <span className="font-bold text-white text-2xl">H</span>
-                    </div>
+                    <BrandMark />
                     <span className="font-bold text-xl text-foreground tracking-[-0.06em]">HelpHub</span>
                   </Link>
                   <ThemeToggle />
