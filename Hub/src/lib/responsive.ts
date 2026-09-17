@@ -3,6 +3,9 @@
 export const container =
   "container mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12";
 
+/** Faixa lateral (~8%) — só itens (texto, carousel, botões, animações), nunca o fundo da seção. */
+export const pageGutter = "hh-page-content";
+
 export const sectionPy = "py-24 sm:py-32 xl:py-36";
 
 /** JetBrains Mono ocupa mais largura por caractere que uma sans proporcional:
