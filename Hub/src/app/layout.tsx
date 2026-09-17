@@ -42,7 +42,7 @@ export default function RootLayout({
         >
           <FaviconTheme />
           <Header />
-          <main className="flex-1">
+          <main className="hh-page flex-1">
             {children}
           </main>
           <Footer />
