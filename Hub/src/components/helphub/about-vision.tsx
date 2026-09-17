@@ -8,11 +8,11 @@ export function AboutVision() {
     <section
       id="sobre"
       className={cn(
-        "relative overflow-hidden border-y border-border/40 bg-muted",
+        "relative overflow-x-clip border-y border-border/40 bg-muted",
         responsive.sectionPy,
       )}
     >
-      <div className={cn("relative z-10", responsive.container)}>
+      <div className={cn("relative z-10", responsive.pageGutter, responsive.container)}>
         <div className={cn(responsive.gridCols2, "gap-16 lg:gap-0 xl:gap-24 lg:divide-x lg:divide-border")}>
 
           <div className="lg:pr-16 flex flex-col justify-start">

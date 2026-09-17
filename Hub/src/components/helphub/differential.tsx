@@ -5,11 +5,11 @@ import * as responsive from "@/lib/responsive";
 
 export function Differential() {
   return (
-    <section id="diferencial" className={cn("bg-slate-900 dark:bg-slate-950 text-white relative overflow-hidden", responsive.sectionPy)}>
+    <section id="diferencial" className={cn("bg-slate-900 dark:bg-slate-950 text-white relative overflow-x-clip overflow-y-hidden", responsive.sectionPy)}>
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[120px] pointer-events-none opacity-50"></div>
 
-      <div className={cn("relative z-10", responsive.container)}>
+      <div className={cn("relative z-10", responsive.pageGutter, responsive.container)}>
         <div className="mx-auto max-w-3xl text-center">
           <div className="flex justify-center mb-6">
             <div className="h-16 w-16 rounded-2xl bg-white/10 flex items-center justify-center border border-white/20 backdrop-blur-sm">

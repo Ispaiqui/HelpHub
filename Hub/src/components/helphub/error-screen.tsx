@@ -27,14 +27,15 @@ export function ErrorScreen({
   return (
     <div
       className={cn(
-        "relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden p-6 md:p-12",
+        "relative flex min-h-[70vh] flex-col items-center justify-center overflow-x-clip py-6 md:py-12",
         className
       )}
     >
       <div className="pointer-events-none absolute top-1/4 left-1/4 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-destructive/5 blur-3xl" />
 
-      <div className="relative w-full max-w-lg space-y-6 rounded-2xl border border-border/50 bg-card p-8 text-center shadow-2xl backdrop-blur-xl md:rounded-3xl md:p-12 dark:bg-card/50">
+      <div className={cn("relative w-full", responsive.pageGutter)}>
+      <div className="relative mx-auto w-full max-w-lg space-y-6 rounded-2xl border border-border/50 bg-card p-8 text-center shadow-2xl backdrop-blur-xl md:rounded-3xl md:p-12 dark:bg-card/50">
         {statusCode !== undefined && (
           <span
             aria-hidden
@@ -76,6 +77,7 @@ export function ErrorScreen({
             Voltar ao início
           </Link>
         </div>
+      </div>
       </div>
     </div>
   );

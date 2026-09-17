@@ -149,8 +149,8 @@ export function Services() {
   }, [api]);
 
   return (
-    <section id="servicos" className={cn("relative bg-background", responsive.sectionPy)}>
-      <div className={responsive.container}>
+    <section id="servicos" className={cn("relative overflow-x-clip bg-background", responsive.sectionPy)}>
+      <div className={cn(responsive.pageGutter, responsive.container)}>
         <div className="mx-auto max-w-2xl text-center mb-16">
           <h2 className={cn(responsive.sectionHeading, "text-foreground")}>
             O que vendemos
