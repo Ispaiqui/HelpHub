@@ -65,7 +65,6 @@ export const packages = [
     slug: "essencial",
     href: "/demonstracoes/essencial",
     name: "Essencial",
-    price: "R$ 649,70",
     positioning:
       "Página única e direta: hero, benefícios, prova, FAQ e WhatsApp.",
     density: "Limpo · 1–2 cinzas · fade CSS",
@@ -74,7 +73,6 @@ export const packages = [
     slug: "plus",
     href: "/demonstracoes/plus",
     name: "Plus",
-    price: "R$ 728,60",
     positioning:
       "O Essencial com passo a passo, regiões e oferta — confiança local.",
     density: "Layout local · CSS com stagger",
@@ -83,7 +81,6 @@ export const packages = [
     slug: "avancado",
     href: "/demonstracoes/avancado",
     name: "Avançado",
-    price: "R$ 842,30",
     positioning:
       "Arco de conversão completo: dor, solução, prova, oferta e microinterações.",
     density: "Copy cheia · framer-motion em todo o arco",
@@ -92,7 +89,6 @@ export const packages = [
     slug: "premium",
     href: "/demonstracoes/premium",
     name: "Premium",
-    price: "R$ 987,10",
     positioning:
       "O mesmo arco, com tipografia, assimetria e motion de um degrau acima.",
     density: "Craft editorial · parallax e motion",
