@@ -6,14 +6,6 @@ export const whatsappHref = (text?: string) =>
   buildWhatsappHref(text ?? "Olá. Quero mais informações.");
 
 export const demoWhatsappMessages = {
-  essencialHero: "Olá! Vi a demo Essencial no hero e quero agendar pelo WhatsApp.",
-  essencialHeroContato:
-    "Olá! Cliquei em Contato na demo Essencial e quero falar com a empresa.",
-  essencialBeneficios:
-    "Olá! Vi os benefícios da demo Essencial e quero contratar o serviço.",
-  essencialContato:
-    "Olá! Estou na seção de contato da demo Essencial e quero atendimento.",
-  essencialSticky: "Olá! Abri o WhatsApp pela barra da demo Essencial.",
   plusHero: "Olá! Vi a demo Plus no hero e quero agendar pelo WhatsApp.",
   plusHeroContato: "Olá! Cliquei em Contato na demo Plus e quero falar com a empresa.",
   plusContato: "Olá! Estou na seção de contato da demo Plus e quero atendimento.",
@@ -62,36 +54,37 @@ export const testimonialShort = {
 
 export const packages = [
   {
-    slug: "essencial",
-    href: "/demonstracoes/essencial",
-    name: "Essencial",
-    positioning:
-      "Página única e direta: hero, benefícios, prova, FAQ e WhatsApp.",
-    density: "Limpo · 1–2 cinzas · fade CSS",
-  },
-  {
     slug: "plus",
     href: "/demonstracoes/plus",
     name: "Plus",
     positioning:
-      "O Essencial com passo a passo, regiões e oferta — confiança local.",
+      "O equilíbrio para negócios locais e prestadores de serviço.",
     density: "Layout local · CSS com stagger",
+    price: "R$ 724,90",
+    priceNote: "pagamento único",
+    recommended: false,
   },
   {
     slug: "avancado",
     href: "/demonstracoes/avancado",
     name: "Avançado",
     positioning:
-      "Arco de conversão completo: dor, solução, prova, oferta e microinterações.",
+      "Recomendado para uma página completa, com foco em conversão.",
     density: "Copy cheia · framer-motion em todo o arco",
+    price: "R$ 882,77",
+    priceNote: "pagamento único",
+    recommended: true,
   },
   {
     slug: "premium",
     href: "/demonstracoes/premium",
     name: "Premium",
     positioning:
-      "O mesmo arco, com tipografia, assimetria e motion de um degrau acima.",
+      "Conteúdo e recursos completos, com mais rodadas de revisão.",
     density: "Craft editorial · parallax e motion",
+    price: "R$ 1.399,10",
+    priceNote: "pagamento único",
+    recommended: false,
   },
 ] as const;
 
