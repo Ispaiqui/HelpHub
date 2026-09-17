@@ -5,11 +5,12 @@ import * as responsive from "@/lib/responsive";
 
 export default function FormulariosPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background p-6 md:p-12 lg:p-24 relative overflow-hidden">
+    <main className="relative flex min-h-full flex-col items-center justify-center overflow-x-clip bg-background py-6 md:py-12 lg:py-24">
       <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-hh-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative w-full max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl space-y-8 md:space-y-10 rounded-2xl md:rounded-3xl bg-card p-8 md:p-12 lg:p-16 shadow-2xl border border-border/50 dark:bg-card/50 backdrop-blur-xl">
+      <div className={cn("relative w-full", responsive.pageGutter)}>
+      <div className="mx-auto w-full max-w-md space-y-8 rounded-2xl border border-border/50 bg-card p-8 shadow-2xl md:max-w-2xl md:space-y-10 md:rounded-3xl md:p-12 lg:max-w-4xl lg:p-16 xl:max-w-5xl 2xl:max-w-6xl dark:bg-card/50 backdrop-blur-xl">
         <div className="text-center">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-[-0.04em] text-foreground bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
             Fale Conosco
@@ -59,6 +60,7 @@ export default function FormulariosPage() {
             Enviar Mensagem
           </Button>
         </form>
+      </div>
       </div>
     </main>
   );
