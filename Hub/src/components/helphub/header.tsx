@@ -103,7 +103,7 @@ export function Header() {
           >
             Contato
           </a>
-          <Button className="rounded-full" onClick={() => router.push("#servicos")}>
+          <Button className="rounded-full" onClick={() => router.push("/#servicos")}>
             Começar agora
           </Button>
         </div>
@@ -150,7 +150,7 @@ export function Header() {
                   >
                     Contato
                   </a>
-                  <Button className="w-full justify-center" onClick={() => handleNav("#servicos")}>
+                  <Button className="w-full justify-center" onClick={() => handleNav("/#servicos")}>
                     Começar agora
                   </Button>
                 </div>
