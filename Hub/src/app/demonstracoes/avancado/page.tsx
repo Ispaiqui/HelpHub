@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/demonstracoes/contact-form";
 import { DemoBadge } from "@/components/demonstracoes/demo-badge";
 import { FaqList } from "@/components/demonstracoes/faq-list";
 import { FadeUp, ProofCard } from "@/components/demonstracoes/motion/avancado-motion";
@@ -11,7 +10,6 @@ import {
   offerItems,
   proofPoints,
   testimonial,
-  whatsappNumber,
 } from "@/lib/demonstracoes/content";
 
 export const metadata: Metadata = {
@@ -174,30 +172,10 @@ export default function AvancadoPage() {
             <FaqList />
           </FadeUp>
         </section>
-
-        <section id="contato" className="bg-ink pb-28 text-paper sm:pb-24">
-          <div className="mx-auto grid max-w-5xl gap-12 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-2 lg:items-start lg:gap-16">
-            <FadeUp>
-              <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
-                Manda a região e o que você precisa.
-              </h2>
-              <p className="mt-5 max-w-md text-sm leading-7 text-gray-300 sm:text-base">
-                Respondemos no WhatsApp com horário. O formulário desta demo só
-                valida na tela.
-              </p>
-              <WhatsAppLink variant="invert" className="mt-10" size="lg" message={demoWhatsappMessages.avancadoContato}>
-                WhatsApp
-              </WhatsAppLink>
-            </FadeUp>
-            <FadeUp delay={0.08} className="bg-paper p-6 text-ink sm:p-8">
-              <ContactForm submitLabel="Enviar" />
-            </FadeUp>
-          </div>
-        </section>
       </div>
 
       <footer className="border-t border-line px-5 py-10 text-center text-xs leading-5 text-gray-500 sm:px-8">
-        Empresa · demo HelpHub Avançado · wa.me/{whatsappNumber}
+        Empresa · demo HelpHub Avançado
       </footer>
       <StickyWhatsApp variant="float" message={demoWhatsappMessages.avancadoSticky} />
     </div>

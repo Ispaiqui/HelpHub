@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/demonstracoes/contact-form";
 import { DemoBadge } from "@/components/demonstracoes/demo-badge";
 import { FaqList } from "@/components/demonstracoes/faq-list";
 import { StickyWhatsApp } from "@/components/demonstracoes/sticky-whatsapp";
@@ -11,8 +10,6 @@ import {
   steps,
   testimonial,
   testimonialShort,
-  whatsappHref,
-  whatsappNumber,
 } from "@/lib/demonstracoes/content";
 
 export const metadata: Metadata = {
@@ -53,19 +50,9 @@ export default function PlusPage() {
                 horário combinado, garantia por escrito. Pessoa física e empresa
                 falam com o mesmo time.
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <WhatsAppLink size="lg" message={demoWhatsappMessages.plusHero}>
-                  WhatsApp
-                </WhatsAppLink>
-                <a
-                  href={whatsappHref(demoWhatsappMessages.plusHeroContato)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-12 items-center justify-center border border-ink px-6 text-sm font-medium transition-colors duration-200 hover:bg-ink hover:text-paper"
-                >
-                  Contato
-                </a>
-              </div>
+              <WhatsAppLink className="mt-8" size="lg" message={demoWhatsappMessages.plusHero}>
+                WhatsApp
+              </WhatsAppLink>
             </div>
           </div>
         </section>
@@ -180,29 +167,10 @@ export default function PlusPage() {
             <FaqList className="bg-white px-1" />
           </div>
         </section>
-
-        <section
-          id="contato"
-          className="hh-in mx-auto grid max-w-5xl gap-12 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-16"
-        >
-          <div>
-            <h2 className="text-2xl font-medium tracking-tight sm:text-3xl">
-              Combina um horário.
-            </h2>
-            <p className="mt-4 max-w-md text-sm leading-7 text-gray-600">
-              Diga a região, o que você precisa e quando prefere. Confirmamos
-              visita — no mesmo dia, se couber.
-            </p>
-            <WhatsAppLink className="mt-8" size="lg" message={demoWhatsappMessages.plusContato}>
-              WhatsApp
-            </WhatsAppLink>
-          </div>
-          <ContactForm tone="panel" submitLabel="Enviar" />
-        </section>
       </div>
 
       <footer className="border-t border-line bg-white px-5 py-10 text-center text-xs leading-5 text-gray-500 sm:px-8">
-        Empresa · demo HelpHub Plus · wa.me/{whatsappNumber}
+        Empresa · demo HelpHub Plus
       </footer>
       <StickyWhatsApp variant="bar" message={demoWhatsappMessages.plusSticky} />
     </div>

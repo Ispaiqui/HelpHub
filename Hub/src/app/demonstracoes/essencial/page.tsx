@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/demonstracoes/contact-form";
 import { DemoBadge } from "@/components/demonstracoes/demo-badge";
 import { FaqList } from "@/components/demonstracoes/faq-list";
 import { StickyWhatsApp } from "@/components/demonstracoes/sticky-whatsapp";
 import { WhatsAppLink } from "@/components/demonstracoes/whatsapp-link";
-import { benefits, demoWhatsappMessages, faqsEssencial, testimonial, whatsappHref, whatsappNumber } from "@/lib/demonstracoes/content";
+import { benefits, demoWhatsappMessages, faqsEssencial, testimonial } from "@/lib/demonstracoes/content";
 
 export const metadata: Metadata = {
   title: "Empresa — Pacote Essencial",
@@ -39,19 +38,9 @@ export default function EssencialPage() {
               Horário combinado no WhatsApp, equipe preparada, garantia por
               escrito. Sem enrolação.
             </p>
-            <div className="hh-in hh-in-d3 mt-10 flex flex-col gap-3 sm:flex-row">
-              <WhatsAppLink size="lg" message={demoWhatsappMessages.essencialHero}>
-                WhatsApp
-              </WhatsAppLink>
-              <a
-                href={whatsappHref(demoWhatsappMessages.essencialHeroContato)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-12 items-center justify-center border border-ink px-6 text-sm font-medium transition-colors duration-200 hover:bg-ink hover:text-paper"
-              >
-                Contato
-              </a>
-            </div>
+            <WhatsAppLink className="hh-in hh-in-d3 mt-10" size="lg" message={demoWhatsappMessages.essencialHero}>
+              WhatsApp
+            </WhatsAppLink>
             <p className="hh-in hh-in-d4 mt-5 text-xs leading-5 text-gray-500">
               *Mesmo dia sujeito a vaga na agenda do dia.
             </p>
@@ -110,28 +99,10 @@ export default function EssencialPage() {
             <FaqList items={faqsEssencial} />
           </div>
         </section>
-
-        <section id="contato" className="border-t border-line bg-white">
-          <div className="hh-in mx-auto max-w-2xl px-5 py-16 sm:px-8 sm:py-20">
-            <h2 className="text-2xl font-medium tracking-tight sm:text-[1.75rem]">
-              Fale com a empresa
-            </h2>
-            <p className="mt-4 max-w-lg text-sm leading-7 text-gray-600 sm:text-base">
-              WhatsApp é o caminho mais rápido. Se preferir, deixe nome,
-              telefone e o que você precisa.
-            </p>
-            <div className="mt-8">
-              <WhatsAppLink className="w-full sm:w-auto" size="lg" message={demoWhatsappMessages.essencialContato}>
-                WhatsApp
-              </WhatsAppLink>
-            </div>
-            <ContactForm className="mt-12" submitLabel="Enviar" />
-          </div>
-        </section>
       </div>
 
       <footer className="border-t border-line px-5 py-10 text-center text-xs leading-5 text-gray-500 sm:px-8">
-        Empresa · demo HelpHub Essencial · wa.me/{whatsappNumber}
+        Empresa · demo HelpHub Essencial
       </footer>
       <StickyWhatsApp variant="bar" message={demoWhatsappMessages.essencialSticky} />
     </div>
