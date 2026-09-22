@@ -19,6 +19,7 @@
   --carousel-control-foreground: var(--hh-white);
   /* ~8% cada lado (antes 5%). Só itens: texto, carousel, botões, animações. Fundo da seção full-bleed. */
   --hh-page-gutter: max(1.25rem, 8%);
+  --hh-header-height: 4.3125rem;
 }
 
 .dark {
@@ -56,9 +57,9 @@
    GUTTER DO CONTEÚDO
    ============================================================
    PT-BR: seções pintam a largura toda. Texto usa .hh-page-content
-   (8% / min 1.25rem). Header e footer ficam full-bleed. Demos
-   não usam .hh-page-content. overflow-x: clip mata barra
-   horizontal de blur/scale/100vw. */
+   (8% / min 1.25rem) OU container — nunca os dois. Header e footer
+   full-bleed no casco, inner só container. LPs usam lpMax + lpPadX.
+   overflow-x: clip mata barra horizontal de blur/scale/100vw. */
 .hh-page {
   min-width: 0;
   overflow-x: clip;
