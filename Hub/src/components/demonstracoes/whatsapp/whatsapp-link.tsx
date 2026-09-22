@@ -1,5 +1,5 @@
-import { lpButtonVariants, type LpButtonVariantProps } from "@/components/demonstracoes/lp-button";
-import { WhatsAppIcon } from "@/components/demonstracoes/whatsapp-icon";
+import { lpButtonVariants, type LpButtonVariantProps } from "@/components/demonstracoes/layout";
+import { WhatsAppIcon } from "./whatsapp-icon";
 import { whatsappHref } from "@/lib/demonstracoes/content";
 import { cn } from "@/lib/utils";
 
