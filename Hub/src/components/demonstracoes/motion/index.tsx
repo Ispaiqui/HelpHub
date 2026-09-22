@@ -4,23 +4,34 @@ import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-const ease = [0.16, 1, 0.3, 1] as const;
+export type MotionDensity = "plus" | "avancado" | "premium";
 
-export function Reveal({
-  children,
-  className,
-  delay = 0,
-  y = 28,
-  immediate = false,
-}: {
+const tokens = {
+  plus: { y: 12, duration: 0.48, ease: [0.22, 1, 0.36, 1] as const },
+  avancado: { y: 18, duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
+  premium: { y: 28, duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
+};
+
+type FadeProps = {
   children: React.ReactNode;
   className?: string;
   delay?: number;
-  y?: number;
   immediate?: boolean;
-}) {
+  density?: MotionDensity;
+  y?: number;
+};
+
+export function Fade({
+  children,
+  className,
+  delay = 0,
+  immediate = false,
+  density = "avancado",
+  y,
+}: FadeProps) {
   const reduce = useReducedMotion();
-  const hidden = reduce ? false : { opacity: 0, y };
+  const token = tokens[density];
+  const hidden = reduce ? false : { opacity: 0, y: y ?? token.y };
   const shown = { opacity: 1, y: 0 };
 
   return (
@@ -30,10 +41,49 @@ export function Reveal({
       animate={immediate || reduce ? shown : undefined}
       whileInView={immediate || reduce ? undefined : shown}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.7, delay, ease }}
+      transition={{ duration: token.duration, delay, ease: token.ease }}
     >
       {children}
     </motion.div>
+  );
+}
+
+export function FadeUp(props: Omit<FadeProps, "density">) {
+  return <Fade density="avancado" {...props} />;
+}
+
+export function Reveal(props: Omit<FadeProps, "density">) {
+  return <Fade density="premium" {...props} />;
+}
+
+export function ProofCard({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const reduce = useReducedMotion();
+  const hidden = reduce ? false : { opacity: 0, y: 16 };
+  const shown = { opacity: 1, y: 0 };
+
+  return (
+    <motion.article
+      className={cn(
+        "border border-line bg-white p-5 transition-colors duration-200 hover:border-ink",
+        className,
+      )}
+      initial={hidden}
+      animate={reduce ? shown : undefined}
+      whileInView={reduce ? undefined : shown}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.4, delay, ease: tokens.avancado.ease }}
+      whileHover={reduce ? undefined : { y: -3 }}
+    >
+      {children}
+    </motion.article>
   );
 }
 
@@ -68,12 +118,17 @@ export function StaggerItem({
   children: React.ReactNode;
   className?: string;
 }) {
+  const reduce = useReducedMotion();
   return (
     <motion.div
       className={className}
       variants={{
-        hidden: { opacity: 0, y: 20 },
-        show: { opacity: 1, y: 0, transition: { duration: 0.65, ease } },
+        hidden: reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
+        show: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: reduce ? 0 : 0.65, ease: tokens.premium.ease },
+        },
       }}
     >
       {children}
@@ -89,7 +144,7 @@ export function RuleGrow({ className }: { className?: string }) {
       initial={reduce ? { scaleX: 1 } : { scaleX: 0 }}
       whileInView={{ scaleX: 1 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.8, ease }}
+      transition={{ duration: 0.8, ease: tokens.premium.ease }}
     />
   );
 }
@@ -108,7 +163,7 @@ export function FloatCta({
       initial={reduce ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.7, delay: 0.15, ease }}
+      transition={{ duration: 0.7, delay: 0.15, ease: tokens.premium.ease }}
       whileHover={reduce ? undefined : { y: -4 }}
     >
       {children}
