@@ -1,5 +1,5 @@
 import { Geist, IBM_Plex_Mono, Instrument_Serif } from "next/font/google";
-import { ContactFormScript } from "@/components/demonstracoes/contact-form-script";
+import { ContactFormScript } from "@/components/demonstracoes/sections";
 import "./demonstracoes.css";
 
 const geistSans = Geist({
@@ -26,7 +26,7 @@ export default function DemonstracoesLayout({
 }) {
   return (
     <div
-      className={`hh-demos ${geistSans.variable} ${instrument.variable} ${plex.variable}`}
+      className={`hh-demos flex-1 ${geistSans.variable} ${instrument.variable} ${plex.variable}`}
     >
       {children}
       <ContactFormScript />

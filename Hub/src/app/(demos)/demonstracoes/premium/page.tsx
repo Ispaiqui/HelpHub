@@ -1,8 +1,18 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { ContactForm } from "@/components/demonstracoes/contact-form";
-import { DemoBadge } from "@/components/demonstracoes/demo-badge";
-import { FaqList } from "@/components/demonstracoes/faq-list";
+import {
+  DemoBadge,
+  LpFooter,
+  LpHeader,
+  StickyWhatsApp,
+} from "@/components/demonstracoes/chrome";
+import { LpSection } from "@/components/demonstracoes/layout";
+import {
+  ContactForm,
+  FaqList,
+  OfferList,
+  TestimonialBlock,
+} from "@/components/demonstracoes/sections";
 import {
   FloatCta,
   ParallaxFrame,
@@ -10,15 +20,12 @@ import {
   RuleGrow,
   Stagger,
   StaggerItem,
-} from "@/components/demonstracoes/motion/premium-motion";
-import { StickyWhatsApp } from "@/components/demonstracoes/sticky-whatsapp";
-import { WhatsAppLink } from "@/components/demonstracoes/whatsapp-link";
+} from "@/components/demonstracoes/motion";
+import { WhatsAppLink } from "@/components/demonstracoes/whatsapp";
 import {
   demoWhatsappMessages,
   faqsPremium,
-  offerItems,
   proofPoints,
-  testimonial,
   whatsappHref,
   whatsappNumber,
 } from "@/lib/demonstracoes/content";
@@ -33,16 +40,18 @@ export default function PremiumPage() {
   return (
     <div className="hh-lp min-h-full bg-paper">
       <DemoBadge packageName="Premium" />
-
-      <header className="border-b border-line bg-paper">
-        <div className="mx-auto flex max-w-6xl items-baseline justify-between px-5 py-6 sm:px-8">
-          <p className="font-serif text-2xl tracking-tight">Empresa</p>
-          <p className="label text-gray-500">Atendimento local</p>
-        </div>
-      </header>
+      <LpHeader
+        density="premium"
+        tone="editorial"
+        tagline="Atendimento local"
+      />
 
       <div>
-        <section className="mx-auto max-w-6xl px-5 pb-10 pt-14 sm:px-8 sm:pb-12 sm:pt-24">
+        <LpSection
+          density="premium"
+          padded={false}
+          className="pt-14 pb-10 sm:pt-24 sm:pb-12"
+        >
           <div className="grid gap-12 lg:grid-cols-12 lg:items-end lg:gap-16">
             <Reveal immediate className="lg:col-span-8">
               <p className="label text-gray-500">Uma terça qualquer</p>
@@ -59,9 +68,13 @@ export default function PremiumPage() {
             </Reveal>
           </div>
           <RuleGrow className="mt-14" />
-        </section>
+        </LpSection>
 
-        <section className="mx-auto grid max-w-6xl gap-12 px-5 pb-20 sm:px-8 sm:pb-28 lg:grid-cols-12 lg:gap-16">
+        <LpSection
+          density="premium"
+          padded={false}
+          className="grid gap-12 pb-20 sm:pb-28 lg:grid-cols-12 lg:gap-16"
+        >
           <Reveal immediate className="overflow-hidden lg:col-span-7">
             <ParallaxFrame>
               <Image
@@ -106,28 +119,26 @@ export default function PremiumPage() {
               </a>
             </FloatCta>
           </div>
-        </section>
+        </LpSection>
 
-        <section className="bg-ink text-paper">
-          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
-            <Reveal>
-              <p className="label text-gray-400">A dor, sem metáfora</p>
-              <h2 className="mt-5 max-w-3xl font-serif text-4xl leading-[1.12] sm:text-5xl lg:text-[3.5rem]">
-                Prazo estourando. Loja fechando mais cedo. Grupo pedindo
-                “previsão”.
-              </h2>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="mt-8 max-w-xl text-sm leading-7 text-gray-300 sm:text-base sm:leading-8">
-                A equipe que “passa aí essa semana” não serve. O que serve é
-                alguém que confirma hoje, chega na janela combinada e não some
-                quando o trabalho pede um extra.
-              </p>
-            </Reveal>
-          </div>
-        </section>
+        <LpSection density="premium" bleed className="bg-ink text-paper">
+          <Reveal>
+            <p className="label text-gray-400">A dor, sem metáfora</p>
+            <h2 className="mt-5 max-w-3xl font-serif text-4xl leading-[1.12] sm:text-5xl lg:text-[3.5rem]">
+              Prazo estourando. Loja fechando mais cedo. Grupo pedindo
+              “previsão”.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="mt-8 max-w-xl text-sm leading-7 text-gray-300 sm:text-base sm:leading-8">
+              A equipe que “passa aí essa semana” não serve. O que serve é
+              alguém que confirma hoje, chega na janela combinada e não some
+              quando o trabalho pede um extra.
+            </p>
+          </Reveal>
+        </LpSection>
 
-        <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
+        <LpSection density="premium">
           <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
             <Reveal className="lg:col-span-5">
               <p className="label text-gray-500">A solução</p>
@@ -155,22 +166,15 @@ export default function PremiumPage() {
               ))}
             </Stagger>
           </div>
-        </section>
+        </LpSection>
 
-        <section className="border-y border-line bg-white">
-          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
-            <Reveal className="lg:max-w-4xl">
-              <p className="font-serif text-[2.15rem] leading-[1.18] sm:text-5xl sm:leading-[1.15]">
-                “{testimonial.quote}”
-              </p>
-              <p className="mt-10 label text-gray-500">
-                {testimonial.name} · {testimonial.role} · {testimonial.place}
-              </p>
-            </Reveal>
-          </div>
-        </section>
+        <LpSection density="premium" bleed className="border-y border-line bg-white">
+          <Reveal className="lg:max-w-4xl">
+            <TestimonialBlock variant="editorial" />
+          </Reveal>
+        </LpSection>
 
-        <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
+        <LpSection density="premium">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <Reveal className="lg:col-span-4">
               <Image
@@ -189,22 +193,14 @@ export default function PremiumPage() {
                   O que você pede. O que a gente faz.
                 </h2>
               </Reveal>
-              <div className="mt-12">
-                {offerItems.map((item, index) => (
-                  <Reveal
-                    key={item.title}
-                    delay={index * 0.08}
-                    className="grid gap-4 border-t border-ink py-8 last:border-b sm:grid-cols-[14rem_1fr] sm:gap-10"
-                  >
-                    <h3 className="font-serif text-2xl leading-snug sm:text-[1.75rem]">
-                      {item.title}
-                    </h3>
-                    <p className="self-center text-sm leading-7 text-gray-600">
-                      {item.body}
-                    </p>
+              <OfferList
+                variant="editorial"
+                wrapRow={(inner, item, index, rowClassName) => (
+                  <Reveal key={item.title} delay={index * 0.08} className={rowClassName}>
+                    {inner}
                   </Reveal>
-                ))}
-              </div>
+                )}
+              />
               <p className="mt-6 text-xs leading-5 text-gray-500">
                 Valor da visita no WhatsApp. O que você precisa e o horário
                 mudam o trabalho — por isso não há tabela genérica nesta página.
@@ -214,20 +210,26 @@ export default function PremiumPage() {
               </WhatsAppLink>
             </div>
           </div>
-        </section>
+        </LpSection>
 
-        <section className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
+        <LpSection
+          density="premium"
+          padded={false}
+          className="py-12 sm:py-16"
+        >
           <Reveal>
             <h2 className="mb-8 font-serif text-3xl tracking-tight sm:text-4xl">
               Perguntas que costumam aparecer
             </h2>
             <FaqList className="bg-white px-2" items={faqsPremium} />
           </Reveal>
-        </section>
+        </LpSection>
 
-        <section
+        <LpSection
           id="contato"
-          className="mx-auto max-w-6xl px-5 py-20 pb-28 sm:px-8 sm:py-28 sm:pb-28"
+          density="premium"
+          padded={false}
+          className="py-20 pb-28 sm:py-28"
         >
           <div className="grid gap-14 border-t border-ink pt-14 lg:grid-cols-12 lg:gap-16">
             <Reveal className="lg:col-span-5">
@@ -241,28 +243,23 @@ export default function PremiumPage() {
               </p>
             </Reveal>
             <Reveal delay={0.1} className="lg:col-span-7">
-              <ContactForm
-                tone="editorial"
-                submitLabel="Enviar"
-              />
+              <ContactForm tone="editorial" submitLabel="Enviar" />
             </Reveal>
           </div>
-        </section>
+        </LpSection>
       </div>
 
-      <footer className="border-t border-ink bg-ink text-paper">
-        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-14 sm:flex-row sm:items-end sm:justify-between sm:px-8 sm:py-16">
-          <div>
-            <p className="font-serif text-4xl leading-none">Empresa</p>
-            <p className="mt-4 text-sm leading-6 text-gray-400">
-              Demo HelpHub Premium · wa.me/{whatsappNumber}
-            </p>
-          </div>
-          <WhatsAppLink variant="invert" size="lg" message={demoWhatsappMessages.premiumFooter}>
-            WhatsApp
-          </WhatsAppLink>
+      <LpFooter density="premium" variant="editorial">
+        <div>
+          <p className="font-serif text-4xl leading-none">Empresa</p>
+          <p className="mt-4 text-sm leading-6 text-gray-400">
+            Demo HelpHub Premium · wa.me/{whatsappNumber}
+          </p>
         </div>
-      </footer>
+        <WhatsAppLink variant="invert" size="lg" message={demoWhatsappMessages.premiumFooter}>
+          WhatsApp
+        </WhatsAppLink>
+      </LpFooter>
       <StickyWhatsApp variant="float" message={demoWhatsappMessages.premiumSticky} />
     </div>
   );
