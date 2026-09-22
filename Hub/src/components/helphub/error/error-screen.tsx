@@ -35,7 +35,7 @@ export function ErrorScreen({
       <div className="pointer-events-none absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-destructive/5 blur-3xl" />
 
       <div className={cn("relative w-full", responsive.pageGutter)}>
-      <div className="relative mx-auto w-full max-w-lg space-y-6 rounded-2xl border border-border/50 bg-card p-8 text-center shadow-2xl backdrop-blur-xl md:rounded-3xl md:p-12 dark:bg-card/50">
+      <div className="relative mx-auto w-full max-w-lg space-y-6 rounded-2xl border border-border bg-card p-8 text-center md:rounded-3xl md:p-12">
         {statusCode !== undefined && (
           <span
             aria-hidden
