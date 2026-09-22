@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/helphub/header";
-import { Footer } from "@/components/helphub/footer";
-import { FaviconTheme } from "@/components/helphub/favicon-theme";
+import { FaviconTheme } from "@/components/helphub/brand";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -41,11 +39,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <FaviconTheme />
-          <Header />
-          <main className="hh-page flex-1">
-            {children}
-          </main>
-          <Footer />
+          {children}
         </ThemeProvider>
       </body>
     </html>
