@@ -1,9 +1,28 @@
-export const whatsappNumber = "5511999999999";
+import { WHATSAPP_NUMBER, whatsappHref as buildWhatsappHref } from "@/lib/whatsapp";
 
-export const whatsappHref = (text?: string) => {
-  const message = text ?? "Olá. Quero mais informações.";
-  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-};
+export const whatsappNumber = WHATSAPP_NUMBER;
+
+export const whatsappHref = (text?: string) =>
+  buildWhatsappHref(text ?? "Olá. Quero mais informações.");
+
+export const demoWhatsappMessages = {
+  plusHero: "Olá! Vi a demo Plus no hero e quero agendar pelo WhatsApp.",
+  plusHeroContato: "Olá! Cliquei em Contato na demo Plus e quero falar com a empresa.",
+  plusContato: "Olá! Estou na seção de contato da demo Plus e quero atendimento.",
+  plusSticky: "Olá! Abri o WhatsApp pela barra da demo Plus.",
+  avancadoSolucao:
+    "Olá! Vi a solução da demo Avançado e quero agendar pelo WhatsApp.",
+  avancadoContato:
+    "Olá! Estou na seção de contato da demo Avançado e quero atendimento.",
+  avancadoSticky: "Olá! Abri o WhatsApp pelo botão flutuante da demo Avançado.",
+  premiumPrimeiroChamado:
+    "Olá! Vi o primeiro chamado da demo Premium e quero falar sobre região e serviço.",
+  premiumHeroContato:
+    "Olá! Cliquei em Contato na demo Premium e quero falar com a empresa.",
+  premiumOferta: "Olá! Vi a oferta da demo Premium e quero o valor da visita no WhatsApp.",
+  premiumFooter: "Olá! Vi o rodapé da demo Premium e quero atendimento.",
+  premiumSticky: "Olá! Abri o WhatsApp pelo botão flutuante da demo Premium.",
+} as const;
 
 export const business = {
   name: "Empresa",
@@ -35,40 +54,37 @@ export const testimonialShort = {
 
 export const packages = [
   {
-    slug: "essencial",
-    href: "/demonstracoes/essencial",
-    name: "Essencial",
-    price: "R$ 649,70",
-    positioning:
-      "Página única e direta: hero, benefícios, prova, FAQ e WhatsApp.",
-    density: "Limpo · 1–2 cinzas · fade CSS",
-  },
-  {
     slug: "plus",
     href: "/demonstracoes/plus",
     name: "Plus",
-    price: "R$ 728,60",
     positioning:
-      "O Essencial com passo a passo, regiões e oferta — confiança local.",
+      "O equilíbrio para negócios locais e prestadores de serviço.",
     density: "Layout local · CSS com stagger",
+    price: "R$ 724,90",
+    priceNote: "pagamento único",
+    recommended: false,
   },
   {
     slug: "avancado",
     href: "/demonstracoes/avancado",
     name: "Avançado",
-    price: "R$ 842,30",
     positioning:
-      "Arco de conversão completo: dor, solução, prova, oferta e microinterações.",
+      "Recomendado para uma página completa, com foco em conversão.",
     density: "Copy cheia · framer-motion em todo o arco",
+    price: "R$ 882,77",
+    priceNote: "pagamento único",
+    recommended: true,
   },
   {
     slug: "premium",
     href: "/demonstracoes/premium",
     name: "Premium",
-    price: "R$ 987,10",
     positioning:
-      "O mesmo arco, com tipografia, assimetria e motion de um degrau acima.",
+      "Conteúdo e recursos completos, com mais rodadas de revisão.",
     density: "Craft editorial · parallax e motion",
+    price: "R$ 1.399,10",
+    priceNote: "pagamento único",
+    recommended: false,
   },
 ] as const;
 

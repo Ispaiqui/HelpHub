@@ -1,13 +1,22 @@
 {
-  "name": "hub-client",
+  "name": "helphub-hub",
   "version": "0.1.0",
   "private": true,
+  "description": "Site e hub digital da HelpHub — landing pages, demonstrações e presença online.",
   "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": ">=20.9.0",
+    "pnpm": ">=10.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "check": "pnpm run typecheck && pnpm run lint",
+    "optimize:brand": "node scripts/optimize-brand-mark.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -21,7 +30,6 @@
     "next-themes": "^0.4.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "shadcn": "^4.19.0",
     "tailwind-merge": "^3.6.0",
     "tw-animate-css": "^1.4.0"
   },
@@ -32,6 +40,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.2",
+    "shadcn": "^4.19.0",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

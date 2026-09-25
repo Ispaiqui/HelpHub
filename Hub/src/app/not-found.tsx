@@ -1,4 +1,4 @@
-import { ErrorScreen } from "@/components/helphub/error-screen";
+import { ErrorScreen } from "@/components/helphub/error";
 
 export default function NotFound() {
   return (

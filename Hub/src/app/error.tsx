@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { ErrorScreen } from "@/components/helphub/error-screen";
+import { ErrorScreen } from "@/components/helphub/error";
 
 export default function Error({
   error,
