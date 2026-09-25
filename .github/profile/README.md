@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="helphubimg.jpg" alt="Logo da HelpHub" width="200" />
+  <img src="https://raw.githubusercontent.com/Ispaiqui/HelpHub/main/helphubimg.jpg" alt="Logo da HelpHub" width="200" />
   
   <h1>HelpHub</h1>
   
