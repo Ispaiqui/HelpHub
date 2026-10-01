@@ -3,6 +3,7 @@ import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { FaviconTheme } from "@/components/helphub/brand";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SITE_URL } from "@/lib/site";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin", "latin-ext"],
@@ -11,8 +12,16 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "HelpHub",
   description: "Uma HUB para o seu negócio.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    url: SITE_URL,
+    siteName: "HelpHub",
+  },
   icons: {
     icon: [
       { url: "/brand/favicon-light.png", type: "image/png", media: "(prefers-color-scheme: light)" },

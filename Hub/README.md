@@ -111,7 +111,7 @@ A HelpHub atua na prospecção, implantação, site, automações e suporte, enq
 
 ## 📫 Contato
 
-- 🌐 **Site:** [helphub.com.br](https://helphub.com.br)
+- 🌐 **Site:** [helphubtec.com.br](https://www.helphubtec.com.br/)
 - ✉️ **Email:** [contato@helphub.com.br](mailto:contato@helphub.com.br)
 - 🔗 **LinkedIn:** [linkedin.com/company/helphub](https://linkedin.com/company/helphub)
 - 📸 **Instagram:** [@helphub](https://instagram.com/helphub)
