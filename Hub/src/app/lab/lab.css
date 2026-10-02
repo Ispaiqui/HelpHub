@@ -7,4 +7,10 @@
   .lab-pin-runway [data-hint] {
     opacity: 0 !important;
   }
+
+  .lab-pin-runway [data-tagline],
+  .lab-pin-runway [data-badge] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

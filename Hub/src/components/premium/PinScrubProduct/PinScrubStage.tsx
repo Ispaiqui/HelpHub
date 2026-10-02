@@ -374,13 +374,13 @@ export function PinScrubStage({
             <div className="relative z-20 mt-2 flex min-h-[4.75rem] max-w-xl flex-col items-center gap-3 px-2 text-center">
               <p
                 data-tagline
-                className="font-sans text-xl font-bold leading-snug tracking-tight sm:text-3xl"
+                className="font-sans text-xl font-bold leading-snug tracking-tight opacity-0 sm:text-3xl"
               >
                 {tagline}
               </p>
               <span
                 data-badge
-                className="inline-flex items-center gap-2 rounded-full border border-[color:color-mix(in_srgb,var(--lab-accent,#60a5fa)_45%,transparent)] bg-[color:color-mix(in_srgb,var(--lab-ink,#f8fafc)_6%,transparent)] px-3 py-1 font-sans text-[10px] uppercase tracking-[0.2em] opacity-80"
+                className="inline-flex items-center gap-2 rounded-full border border-[color:color-mix(in_srgb,var(--lab-accent,#60a5fa)_45%,transparent)] bg-[color:color-mix(in_srgb,var(--lab-ink,#f8fafc)_6%,transparent)] px-3 py-1 font-sans text-[10px] uppercase tracking-[0.2em] opacity-0"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--lab-accent,#60a5fa)]" />
                 {badge}
