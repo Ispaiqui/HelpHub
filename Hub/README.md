@@ -9,6 +9,23 @@
 
 ---
 
+## Lab Premium (pin / scrub)
+
+Capítulo interno para ver e ajustar a animação Premium no IDE. A home e as outras páginas públicas não montam esta cena.
+
+1. Na raiz: `pnpm dev` (ou `pnpm --dir Hub dev`)
+2. Abra `/lab/premium` — [http://localhost:3000/lab/premium](http://localhost:3000/lab/premium)
+3. Edite `Hub/src/lib/animation-brief.ts` e salve. O lab relê estes campos:
+   - `cor` — `primary`, `accent`, `bg` (hex da marca)
+   - `objetos` — núcleo (`id: "hub"`) e satélites da órbita, na ordem do array
+   - `intuito` — uma frase do que o scroll comunica
+   - `marca` — `name`, `tone`, `tagline`
+   - `copy` — título, badge, dica e callouts do palco
+
+Com `prefers-reduced-motion: reduce`, o lab mostra o estado final estático (marca + rede), sem pin e sem scrub.
+
+---
+
 ## 🏢 Sobre Nós
 
 A **HelpHub** é uma empresa focada em ajudar pequenos e médios negócios a **organizar, digitalizar e automatizar suas operações**.
