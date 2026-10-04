@@ -1,0 +1,16 @@
+/* Só a rota /lab. Não entra nas páginas públicas. */
+@media (prefers-reduced-motion: reduce) {
+  .lab-pin-runway {
+    height: auto !important;
+  }
+
+  .lab-pin-runway [data-hint] {
+    opacity: 0 !important;
+  }
+
+  .lab-pin-runway [data-tagline],
+  .lab-pin-runway [data-badge] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
