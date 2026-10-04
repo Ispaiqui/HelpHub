@@ -1,0 +1,11 @@
+{
+  "name": "helphub",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "scripts": {
+    "dev": "pnpm --dir Hub dev",
+    "build": "pnpm --dir Hub build",
+    "start": "pnpm --dir Hub start",
+    "lint": "pnpm --dir Hub lint"
+  }
+}

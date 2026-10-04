@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Search, Lightbulb, Code, Headphones, AlertTriangle, LucideIcon } from "lucide-react";
 
 export interface StepItem {
@@ -79,18 +79,16 @@ export function AboutStep() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [frozen, setFrozen] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    setReducedMotion(query.matches);
-
-    const onChange = (event: MediaQueryListEvent) => setReducedMotion(event.matches);
-    query.addEventListener("change", onChange);
-
-    return () => query.removeEventListener("change", onChange);
-  }, []);
+  const reducedMotion = useSyncExternalStore(
+    (onStoreChange) => {
+      const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+      query.addEventListener("change", onStoreChange);
+      return () => query.removeEventListener("change", onStoreChange);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false,
+  );
+  const paused = !playing || reducedMotion;
 
   useEffect(() => {
     const el = stageRef.current;
@@ -128,9 +126,7 @@ export function AboutStep() {
   useEffect(() => {
     // PT-BR: com "reduzir movimento" ativo a etapa atual fica estática,
     // sem ciclo automático e sem transições.
-    if (!playing || reducedMotion) {
-      setFrozen(true);
-      setPhase("idle");
+    if (paused) {
       return;
     }
 
@@ -178,7 +174,10 @@ export function AboutStep() {
       cancelAnimationFrame(frame);
       timers.forEach(clearTimeout);
     };
-  }, [playing, reducedMotion]);
+  }, [paused]);
+
+  const displayPhase = paused ? "idle" : phase;
+  const displayFrozen = paused || frozen;
 
   return (
     <div className="hh-steps mt-10 select-none px-2 sm:px-4">
@@ -189,15 +188,15 @@ export function AboutStep() {
         <div className="hh-steps__rail" />
 
         <div className="hh-steps__beam-track">
-          {phase === "energy" && <div className="hh-steps__beam" />}
+          {displayPhase === "energy" && <div className="hh-steps__beam" />}
         </div>
 
         {steps.map((step, i) => {
           const { posClass, transitionClass, isCharged } = getStepClasses(
             i,
             activeIndex,
-            phase,
-            frozen,
+            displayPhase,
+            displayFrozen,
             steps.length,
           );
           const Icon = step.icon;
