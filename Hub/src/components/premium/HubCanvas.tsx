@@ -20,6 +20,10 @@ type HubCanvasProps = {
   accent: string;
   primary: string;
   objetos: AnimationBriefObjeto[];
+  /** Abertura da rede no tempo, sem scroll. 0 = só o scrub (lab). */
+  openSeconds?: number;
+  /** Dispara uma vez, quando a abertura no tempo termina. */
+  onOpen?: () => void;
 };
 
 function satelliteSpecs(objetos: AnimationBriefObjeto[]): SatelliteSpec[] {
@@ -63,9 +67,11 @@ type NetworkProps = {
   accent: string;
   primary: string;
   handle: SceneHandle;
+  openSeconds: number;
+  onOpen?: () => void;
 };
 
-function Network({ specs, accent, primary, handle }: NetworkProps) {
+function Network({ specs, accent, primary, handle, openSeconds, onOpen }: NetworkProps) {
   const outer = useRef<THREE.Group>(null);
   const orbit = useRef<THREE.Group>(null);
   const spin = useRef<THREE.Group>(null);
@@ -82,6 +88,7 @@ function Network({ specs, accent, primary, handle }: NetworkProps) {
     hub: new THREE.Vector3(0, 0, 0),
     up: new THREE.Vector3(0, 1, 0),
   });
+  const openedRef = useRef(false);
 
   useFrame(({ camera, clock }) => {
     const proxy = handle.proxy;
@@ -103,7 +110,13 @@ function Network({ specs, accent, primary, handle }: NetworkProps) {
     }
     if (orbit.current) orbit.current.rotation.y = proxy.rotY;
 
-    const bloom = THREE.MathUtils.smoothstep(progress, 0.02, 0.3);
+    const scrollBloom = THREE.MathUtils.smoothstep(progress, 0.02, 0.3);
+    const timedBloom = openSeconds > 0 ? Math.min(1, time / openSeconds) : 0;
+    if (openSeconds > 0 && !openedRef.current && timedBloom >= 1) {
+      openedRef.current = true;
+      onOpen?.();
+    }
+    const bloom = Math.max(timedBloom, scrollBloom);
     const hero = THREE.MathUtils.smoothstep(progress, 0.62, 0.92);
     const radius = THREE.MathUtils.lerp(0.16, 1.32, bloom) + hero * 0.1;
     const { sat, mid, dir, hub, up } = scratch.current;
@@ -279,7 +292,7 @@ function Network({ specs, accent, primary, handle }: NetworkProps) {
   );
 }
 
-function HubScene({ handle, accent, primary, objetos }: HubCanvasProps) {
+function HubScene({ handle, accent, primary, objetos, openSeconds = 0, onOpen }: HubCanvasProps) {
   const specs = useMemo(() => satelliteSpecs(objetos), [objetos]);
 
   return (
@@ -293,6 +306,8 @@ function HubScene({ handle, accent, primary, objetos }: HubCanvasProps) {
         accent={accent}
         primary={primary}
         handle={handle}
+        openSeconds={openSeconds}
+        onOpen={onOpen}
       />
       <ContactShadows
         position={[0, -1.15, 0]}

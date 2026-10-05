@@ -1,7 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PinScrubStage } from "@/components/premium/PinScrubProduct";
 import { HubFallback } from "@/components/premium/HubFallback";
 import { premiumScene } from "@/components/premium/premium-scene";
@@ -36,12 +38,69 @@ type HeroScrubProps = {
   endSlot: ReactNode;
 };
 
+const OPEN_SECONDS = 0.7;
+
+gsap.registerPlugin(ScrollTrigger);
+
+function lockPageScroll() {
+  const html = document.documentElement;
+  const body = document.body;
+  const prevHtml = html.style.overflow;
+  const prevBody = body.style.overflow;
+  html.style.overflow = "hidden";
+  body.style.overflow = "hidden";
+  window.scrollTo(0, 0);
+
+  const block = (event: Event) => event.preventDefault();
+  const blockKey = (event: KeyboardEvent) => {
+    if (
+      event.key === " " ||
+      event.key === "ArrowDown" ||
+      event.key === "ArrowUp" ||
+      event.key === "PageDown" ||
+      event.key === "PageUp" ||
+      event.key === "Home" ||
+      event.key === "End"
+    ) {
+      event.preventDefault();
+    }
+  };
+
+  window.addEventListener("wheel", block, { passive: false });
+  window.addEventListener("touchmove", block, { passive: false });
+  window.addEventListener("keydown", blockKey);
+
+  return () => {
+    html.style.overflow = prevHtml;
+    body.style.overflow = prevBody;
+    window.removeEventListener("wheel", block);
+    window.removeEventListener("touchmove", block);
+    window.removeEventListener("keydown", blockKey);
+    ScrollTrigger.refresh();
+  };
+}
+
 /**
  * Hero público: mesma cena pin/scrub do brief.
  * Sem a barra do lab. Texto e botões chegam em `endSlot`.
  */
 export function HeroScrub({ endSlot }: HeroScrubProps) {
+  const [scrollOn, setScrollOn] = useState(false);
   const { cor, copy, objetos } = animationBrief;
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setScrollOn(true);
+      return;
+    }
+    const failSafe = window.setTimeout(() => setScrollOn(true), 5000);
+    return () => window.clearTimeout(failSafe);
+  }, []);
+
+  useEffect(() => {
+    if (scrollOn) return;
+    return lockPageScroll();
+  }, [scrollOn]);
   const accent = cor.accent;
   const primary = cor.primary;
   const bg = cor.bg ?? "#0f172a";
@@ -101,6 +160,8 @@ export function HeroScrub({ endSlot }: HeroScrubProps) {
           accent={accent}
           primary={primary}
           objetos={objetos}
+          openSeconds={OPEN_SECONDS}
+          onOpen={() => setScrollOn(true)}
         />
       </PinScrubStage>
     </section>
