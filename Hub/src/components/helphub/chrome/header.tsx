@@ -38,6 +38,33 @@ export function Header() {
   const [isOpen, setIsOpen] = React.useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const pillRef = React.useRef<HTMLSpanElement>(null);
+  const pillReady = React.useRef(false);
+
+  const placePill = (el: HTMLElement) => {
+    const pill = pillRef.current;
+    if (!pill) return;
+    if (!pillReady.current) {
+      pill.style.transition = "none";
+      pill.style.width = `${el.offsetWidth}px`;
+      pill.style.height = `${el.offsetHeight}px`;
+      pill.style.transform = `translate3d(${el.offsetLeft}px, ${el.offsetTop}px, 0)`;
+      pill.getBoundingClientRect();
+      pill.style.transition = "";
+      pillReady.current = true;
+    } else {
+      pill.style.width = `${el.offsetWidth}px`;
+      pill.style.height = `${el.offsetHeight}px`;
+      pill.style.transform = `translate3d(${el.offsetLeft}px, ${el.offsetTop}px, 0)`;
+    }
+    pill.style.opacity = "1";
+  };
+
+  const hidePill = () => {
+    const pill = pillRef.current;
+    if (!pill) return;
+    pill.style.opacity = "0";
+  };
 
   const goToInicio = () => {
     if (isHomePath(pathname)) {
@@ -68,13 +95,28 @@ export function Header() {
         <BrandLockup priority symbol />
 
         {/* ≥md: desktop nav */}
-        <nav className={cn(responsive.navDesktop, "items-center gap-8 absolute left-1/2 -translate-x-1/2")}>
+        <nav
+          className={cn(responsive.navDesktop, "absolute left-1/2 -translate-x-1/2 items-center gap-8")}
+          onMouseLeave={hidePill}
+          onBlur={(event) => {
+            const next = event.relatedTarget;
+            if (next instanceof Node && event.currentTarget.contains(next)) return;
+            hidePill();
+          }}
+        >
+          <span
+            ref={pillRef}
+            aria-hidden
+            className="hh-charge pointer-events-none absolute top-0 left-0 rounded-full bg-primary/10 opacity-0"
+          />
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               onClick={link.href === INICIO_HREF ? handleInicioClick : undefined}
-              className="text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
+              onMouseEnter={(event) => placePill(event.currentTarget)}
+              onFocus={(event) => placePill(event.currentTarget)}
+              className="hh-charge relative z-10 px-2 py-1 text-sm font-medium text-muted-foreground hover:text-primary"
             >
               {link.name}
             </Link>
@@ -115,7 +157,7 @@ export function Header() {
                     <button
                       key={link.name}
                       onClick={() => handleNav(link.href)}
-                      className="py-5 text-left text-lg font-medium text-foreground transition-colors duration-200 hover:text-primary"
+                      className="hh-charge py-5 text-left text-lg font-medium text-foreground hover:text-primary"
                     >
                       {link.name}
                     </button>
