@@ -83,7 +83,7 @@ export function ServiceDialog({ selected, onClose }: ServiceDialogProps) {
               )}
               onClick={onClose}
             >
-              {selected.cta}
+              <span className="relative z-10">{selected.cta}</span>
             </a>
           </div>
         </DialogContent>

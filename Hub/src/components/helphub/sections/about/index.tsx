@@ -70,7 +70,7 @@ export function AboutVision() {
                             className="pointer-events-none absolute -inset-2 rounded-full blur-md"
                             style={{ background: item.glow }}
                           />
-                          <span className="relative z-10 block h-full w-full overflow-hidden rounded-full transition-transform group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-primary">
+                          <span className="hh-charge relative z-10 block h-full w-full overflow-hidden rounded-full group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-primary">
                             <img
                               src={item.icon}
                               alt=""

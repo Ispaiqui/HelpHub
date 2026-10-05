@@ -73,8 +73,10 @@ export function ErrorScreen({
               className: "w-full sm:w-auto rounded-full",
             })}
           >
-            <Home className="size-4" />
-            Voltar ao início
+            <span className="relative z-10 inline-flex items-center gap-2">
+              <Home className="size-4" />
+              Voltar ao início
+            </span>
           </Link>
         </div>
       </div>

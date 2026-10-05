@@ -62,7 +62,7 @@ export function Catalog() {
               <Link
                 href={pkg.href}
                 className={cn(buttonVariants(), "mt-8 w-full")}
-              >                Ver demo
+              >                <span className="relative z-10">Ver demo</span>
               </Link>
             </li>
           ))}

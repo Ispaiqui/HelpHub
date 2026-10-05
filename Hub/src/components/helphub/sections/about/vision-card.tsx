@@ -8,7 +8,7 @@ type VisionCardProps = {
 
 export function VisionCard({ icon: Icon, title, children }: VisionCardProps) {
   return (
-    <div className="relative flex flex-col items-center rounded-2xl bg-card p-8 text-center shadow-sm ring-1 ring-border transition-shadow hover:shadow-md">
+    <div className="hh-charge relative flex flex-col items-center rounded-2xl bg-card p-8 text-center shadow-sm ring-1 ring-border hover:-translate-y-0.5">
       <div className="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
         <Icon className="h-6 w-6 text-primary" />
       </div>
