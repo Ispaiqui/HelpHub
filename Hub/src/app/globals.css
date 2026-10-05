@@ -88,24 +88,38 @@
 
 .hh-steps {
   --hh-step-width: 180px;
-  --hh-beam-width: 52px;
   --hh-icon-size: 80px;
   /* Eixo horizontal dos ícones: padding-top do card (60px) + metade do ícone (40px) */
   --hh-step-axis: 100px;
+  --hh-active-scale: 1.08;
+  --hh-side-scale: 0.88;
+  /* Vão real entre a borda do ícone ativo (maior) e a do vizinho (menor). */
+  --hh-energy-gap: calc(
+    var(--hh-step-width) - var(--hh-icon-size) / 2 * (var(--hh-active-scale) + var(--hh-side-scale))
+  );
+  --hh-beam-width: calc(var(--hh-energy-gap) * 0.4);
+  --hh-charge-ms: 240ms;
+  --hh-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --hh-travel-ease: cubic-bezier(0.45, 0, 0.25, 1);
+  position: relative;
+  min-height: 300px;
+  overflow: hidden;
+  contain: layout paint;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
 }
 
 @media (max-width: 639px) {
   .hh-steps {
     --hh-step-width: 148px;
+    min-height: 280px;
   }
 }
 
-.hh-steps__stage {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+.hh-steps__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 /* --- Trilho estático que conecta as etapas --- */
@@ -117,41 +131,71 @@
   height: 2px;
   width: calc(var(--hh-step-width) * 3);
   transform: translate(-50%, -50%);
-  background: var(--border);
+  /* --border no escuro é a mesma cor de bg-muted. A linha sumia. */
+  background: color-mix(in srgb, var(--muted-foreground) 72%, transparent);
   pointer-events: none;
 }
 
-/* Percurso do feixe: só o vão entre os círculos, nunca por cima do ícone. */
-.hh-steps__beam-track {
+/* Percurso da luz: da borda do ícone ativo até a borda do próximo.
+   Fica sob os cards, então o feixe parece sair de um e entrar no outro. */
+.hh-steps__energy {
   position: absolute;
   top: var(--hh-step-axis);
   left: 50%;
-  z-index: 0;
+  z-index: 1;
   height: 16px;
-  width: calc(var(--hh-step-width) - var(--hh-icon-size));
-  transform: translate(calc(var(--hh-icon-size) / 2), -50%);
+  width: var(--hh-energy-gap);
+  transform: translate(calc(var(--hh-icon-size) / 2 * var(--hh-active-scale)), -50%);
   pointer-events: none;
+}
+
+/* Rastro que acende o trilho atrás do feixe e apaga quando os cards deslizam. */
+.hh-steps__trail {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(to right, var(--hh-blue-500), var(--hh-blue-400));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--hh-blue-500) 70%, transparent);
+  transform-origin: left center;
+  transform: translate3d(0, -50%, 0) scaleX(0);
+  opacity: 0;
 }
 
 .hh-steps__beam {
   position: absolute;
   top: 50%;
   left: 0;
-  height: 3px;
+  height: 4px;
   width: var(--hh-beam-width);
   border-radius: 9999px;
   background: linear-gradient(
     to right,
     transparent 0%,
-    var(--hh-blue-600) 35%,
-    var(--hh-blue-400) 70%,
+    var(--hh-blue-500) 18%,
+    var(--hh-blue-400) 50%,
+    var(--hh-blue-500) 82%,
     transparent 100%
   );
   box-shadow:
-    0 0 8px var(--hh-blue-500),
-    0 0 16px color-mix(in srgb, var(--hh-blue-400) 70%, transparent);
+    0 0 10px var(--hh-blue-400),
+    0 0 18px color-mix(in srgb, var(--hh-blue-500) 80%, transparent);
+  transform: translate3d(calc(var(--hh-beam-width) * -0.5), -50%, 0);
+  opacity: 0;
+}
+
+.hh-steps[data-phase="transfer"] .hh-steps__trail {
   will-change: transform, opacity;
-  animation: hh-energy-travel 500ms ease-in-out forwards;
+  animation:
+    hh-energy-trail var(--hh-beam-ms) var(--hh-travel-ease) both,
+    hh-energy-fade calc(var(--hh-slide-ms) * 0.45) linear var(--hh-beam-ms) both;
+}
+
+.hh-steps[data-phase="transfer"] .hh-steps__beam {
+  will-change: transform, opacity;
+  animation: hh-energy-travel var(--hh-beam-ms) var(--hh-travel-ease) both;
 }
 
 .dark .hh-steps__beam {
@@ -170,27 +214,43 @@
 
 @keyframes hh-energy-travel {
   0% {
-    transform: translate3d(0, -50%, 0);
+    transform: translate3d(calc(var(--hh-beam-width) * -0.5), -50%, 0);
     opacity: 0;
   }
-  12% {
+  15% {
     opacity: 1;
   }
-  88% {
+  85% {
     opacity: 1;
   }
   100% {
-    transform: translate3d(
-      calc(var(--hh-step-width) - var(--hh-icon-size) - var(--hh-beam-width)),
-      -50%,
-      0
-    );
+    transform: translate3d(calc(var(--hh-energy-gap) - var(--hh-beam-width) * 0.5), -50%, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes hh-energy-trail {
+  from {
+    transform: translate3d(0, -50%, 0) scaleX(0);
+  }
+  to {
+    transform: translate3d(0, -50%, 0) scaleX(1);
+  }
+}
+
+@keyframes hh-energy-fade {
+  from {
+    opacity: 1;
+  }
+  to {
     opacity: 0;
   }
 }
 
 /* --- Cards das etapas --- */
 .hh-steps__card {
+  /* Escala ancorada no eixo do ícone: o círculo cresce sem sair do trilho. */
+  --hh-charge-delay: 0ms;
   position: absolute;
   top: 0;
   left: 50%;
@@ -200,38 +260,146 @@
   flex-direction: column;
   align-items: center;
   padding-top: 60px;
+  transform-origin: 50% var(--hh-step-axis);
   will-change: transform, opacity;
+  transition:
+    transform var(--hh-slide-ms) var(--hh-ease),
+    opacity var(--hh-slide-ms) var(--hh-ease);
 }
 
-.hh-steps__card--far-left {
-  transform: translate3d(calc(-50% - var(--hh-step-width) * 2), 0, 0) scale(0.9);
+/* Na troca: o próximo acende quando a luz chega, o atual apaga e os
+   cards deslizam assim que o feixe termina. Sem pausa entre os passos. */
+.hh-steps[data-phase="transfer"] .hh-steps__card {
+  transition-delay: var(--hh-beam-ms);
+}
+
+.hh-steps[data-phase="transfer"] .hh-steps__card[data-charged="true"] {
+  --hh-charge-delay: calc(var(--hh-beam-ms) * 0.7);
+}
+
+.hh-steps[data-phase="transfer"] .hh-steps__card[data-charged="false"] {
+  --hh-charge-delay: var(--hh-beam-ms);
+}
+
+.hh-steps__card[data-wrap="true"] {
+  transition: none;
+}
+
+.hh-steps__card[data-slot="-2"] {
+  transform: translate3d(calc(-50% - var(--hh-step-width) * 2), 0, 0) scale(0.8);
   opacity: 0;
 }
 
-.hh-steps__card--left {
-  transform: translate3d(calc(-50% - var(--hh-step-width)), 0, 0) scale(0.88);
+.hh-steps__card[data-slot="-1"] {
+  transform: translate3d(calc(-50% - var(--hh-step-width)), 0, 0) scale(var(--hh-side-scale));
   opacity: 0.55;
 }
 
-.hh-steps__card--center {
-  transform: translate3d(-50%, 0, 0) scale(1);
-  opacity: 1;
+.hh-steps__card[data-slot="0"] {
   z-index: 10;
+  transform: translate3d(-50%, 0, 0) scale(var(--hh-active-scale));
+  opacity: 1;
 }
 
-.hh-steps__card--right {
-  transform: translate3d(calc(-50% + var(--hh-step-width)), 0, 0) scale(0.88);
+.hh-steps__card[data-slot="1"] {
+  transform: translate3d(calc(-50% + var(--hh-step-width)), 0, 0) scale(var(--hh-side-scale));
   opacity: 0.55;
 }
 
-.hh-steps__card--far-right {
-  transform: translate3d(calc(-50% + var(--hh-step-width) * 2), 0, 0) scale(0.9);
+.hh-steps__card[data-slot="2"] {
+  transform: translate3d(calc(-50% + var(--hh-step-width) * 2), 0, 0) scale(0.8);
   opacity: 0;
+}
+
+/* Carga por opacidade de camadas (::before = preenchimento, ::after = brilho):
+   evita repintar background e box-shadow a cada quadro. */
+.hh-steps__icon {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: var(--hh-icon-size);
+  width: var(--hh-icon-size);
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--card);
+  color: var(--muted-foreground);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  outline: 1px solid var(--border);
+  transition:
+    color var(--hh-charge-ms) var(--hh-ease) var(--hh-charge-delay),
+    outline-color var(--hh-charge-ms) var(--hh-ease) var(--hh-charge-delay);
+}
+
+.hh-steps__icon::before,
+.hh-steps__icon::after {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--hh-charge-ms) var(--hh-ease) var(--hh-charge-delay);
+}
+
+.hh-steps__icon::before {
+  inset: 0;
+  background: var(--hh-blue-500);
+}
+
+.hh-steps__icon::after {
+  inset: 0;
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--hh-blue-500) 18%, transparent),
+    0 0 26px 2px color-mix(in srgb, var(--hh-blue-500) 55%, transparent);
+}
+
+.hh-steps__icon > svg {
+  position: relative;
+  z-index: 1;
+}
+
+.hh-steps__card[data-charged="true"] .hh-steps__icon {
+  color: white;
+  outline-color: transparent;
+}
+
+.hh-steps__card[data-charged="true"] .hh-steps__icon::before,
+.hh-steps__card[data-charged="true"] .hh-steps__icon::after {
+  opacity: 1;
+}
+
+.hh-steps__title {
+  margin-top: 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--muted-foreground);
+  transition: color var(--hh-charge-ms) var(--hh-ease) var(--hh-charge-delay);
+}
+
+.hh-steps__card[data-charged="true"] .hh-steps__title {
+  color: var(--foreground);
+}
+
+.hh-steps__description {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.625;
+  color: var(--muted-foreground);
+  opacity: 0.7;
+  transition: opacity var(--hh-charge-ms) var(--hh-ease) var(--hh-charge-delay);
+}
+
+.hh-steps__card[data-charged="true"] .hh-steps__description {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hh-steps__trail,
   .hh-steps__beam {
-    animation: none;
+    animation: none !important;
     opacity: 0;
   }
 }
