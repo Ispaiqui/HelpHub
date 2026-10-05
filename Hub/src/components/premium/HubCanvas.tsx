@@ -38,7 +38,7 @@ function satelliteSpecs(objetos: AnimationBriefObjeto[]): SatelliteSpec[] {
 }
 
 function Mark() {
-  const source = useTexture("/brand/helphub-mark.webp");
+  const source = useTexture("/helphub-logo-clean.png");
   const gl = useThree((state) => state.gl);
   const texture = useMemo(() => {
     const next = source.clone();
@@ -52,7 +52,7 @@ function Mark() {
   }, [gl, source]);
 
   return (
-    <sprite position={[0, 0.02, 0.58]} scale={[0.92, 0.92, 1]}>
+    <sprite position={[0, 0.02, 0.58]} scale={[1.035, 0.92, 1]}>
       <spriteMaterial map={texture} transparent depthWrite={false} toneMapped={false} />
     </sprite>
   );

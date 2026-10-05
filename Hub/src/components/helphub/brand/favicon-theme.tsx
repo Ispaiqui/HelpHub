@@ -3,8 +3,8 @@
 import * as React from "react";
 import { useTheme } from "next-themes";
 
-const LIGHT = "/brand/favicon-light.png";
-const DARK = "/brand/favicon-dark.png";
+const LIGHT = "/brand/helphub-symbol-light-theme.ico";
+const DARK = "/brand/helphub-symbol-clean.ico";
 
 function applyFavicon(href: string) {
   const absolute = new URL(href, window.location.origin).href;
@@ -12,7 +12,7 @@ function applyFavicon(href: string) {
     .querySelectorAll<HTMLLinkElement>('link[rel="icon"], link[rel="shortcut icon"]')
     .forEach((link) => {
       if (link.href === absolute) return;
-      link.type = "image/png";
+      link.type = "image/x-icon";
       link.removeAttribute("media");
       link.href = href;
     });

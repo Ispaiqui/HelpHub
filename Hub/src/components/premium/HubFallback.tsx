@@ -44,12 +44,11 @@ export function HubFallback({ objetos }: HubFallbackProps) {
         />
       </svg>
       <Image
-        src="/brand/helphub-mark.webp"
+        src="/helphub-logo-clean.png"
         alt=""
-        width={112}
-        height={112}
-        unoptimized
-        className="absolute top-1/2 left-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 object-contain sm:h-28 sm:w-28"
+        width={2848}
+        height={2532}
+        className="absolute top-1/2 left-1/2 h-28 w-auto -translate-x-1/2 -translate-y-1/2 object-contain sm:h-32"
       />
     </div>
   );
