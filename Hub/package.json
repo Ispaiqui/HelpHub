@@ -9,7 +9,8 @@
     "pnpm": ">=10.0.0"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "scripts\\dev.cmd",
+    "dev:win": "scripts\\dev.cmd",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -21,6 +22,7 @@
   "dependencies": {
     "@base-ui/react": "^1.7.0",
     "@gsap/react": "2.1.2",
+    "@helphub/crm": "workspace:*",
     "@helphub/design-system": "github:Ispaiqui/helphub-design-system",
     "@react-three/drei": "10.7.9",
     "@react-three/fiber": "9.8.1",

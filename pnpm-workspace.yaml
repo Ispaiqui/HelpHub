@@ -1,2 +1,6 @@
+packages:
+  - Hub
+  - crm
+
 onlyBuiltDependencies:
   - unrs-resolver
