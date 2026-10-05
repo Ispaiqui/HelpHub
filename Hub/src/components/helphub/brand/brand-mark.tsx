@@ -1,4 +1,8 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
+
+const LOGO_LIGHT = "/helphub-logo-light-theme.png";
+const LOGO_DARK = "/helphub-logo-clean.png";
 
 type BrandMarkProps = {
   className?: string;
@@ -6,15 +10,26 @@ type BrandMarkProps = {
 };
 
 export function BrandMark({ className, priority = false }: BrandMarkProps) {
+  const frame = cn("h-14 w-auto object-contain", className);
+
   return (
-    <img
-      src="/brand/helphub-mark.webp"
-      alt=""
-      width={40}
-      height={40}
-      className={cn("h-10 w-10 object-contain", className)}
-      decoding="async"
-      fetchPriority={priority ? "high" : "low"}
-    />
+    <>
+      <Image
+        src={LOGO_LIGHT}
+        alt="HelpHub"
+        width={2848}
+        height={2532}
+        priority={priority}
+        className={cn(frame, "dark:hidden")}
+      />
+      <Image
+        src={LOGO_DARK}
+        alt="HelpHub"
+        width={2848}
+        height={2532}
+        priority={priority}
+        className={cn(frame, "hidden dark:block")}
+      />
+    </>
   );
 }

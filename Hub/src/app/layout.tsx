@@ -24,8 +24,26 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/brand/favicon-light.png", type: "image/png", media: "(prefers-color-scheme: light)" },
-      { url: "/brand/favicon-dark.png", type: "image/png", media: "(prefers-color-scheme: dark)" },
+      {
+        url: "/brand/helphub-symbol-light-theme.ico",
+        type: "image/x-icon",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/brand/helphub-symbol-clean.ico",
+        type: "image/x-icon",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+    apple: [
+      {
+        url: "/helphub-logo-light-theme.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/helphub-logo-clean.png",
+        media: "(prefers-color-scheme: dark)",
+      },
     ],
   },
 };

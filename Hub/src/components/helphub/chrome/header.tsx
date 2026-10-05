@@ -65,7 +65,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70">
       <div className={cn(responsive.container, responsive.headerHeight, "relative flex items-center justify-between")}>
-        <BrandLockup priority />
+        <BrandLockup priority symbol />
 
         {/* ≥md: desktop nav */}
         <nav className={cn(responsive.navDesktop, "items-center gap-8 absolute left-1/2 -translate-x-1/2")}>
@@ -107,7 +107,7 @@ export function Header() {
               <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b border-border/40 pb-6 pr-10">
-                  <BrandLockup onClick={() => setIsOpen(false)} />
+                  <BrandLockup symbol onClick={() => setIsOpen(false)} />
                   <ThemeToggle />
                 </div>
                 <nav className="mt-2 flex flex-col divide-y divide-border/40">
