@@ -14,8 +14,7 @@ export function Footer() {
           <div className="col-span-2 lg:col-span-1">
             <BrandLockup
               className="mb-3 sm:mb-4"
-              markClassName="h-8 w-8"
-              wordmarkClassName="text-white"
+              markClassName="h-16 w-auto"
             />
             <p className="max-w-sm text-sm leading-relaxed text-slate-400 sm:text-base">
               Ajudamos pequenos e médios negócios a organizar, digitalizar e automatizar suas operações. Você cuida do seu negócio, a HelpHub cuida da tecnologia.

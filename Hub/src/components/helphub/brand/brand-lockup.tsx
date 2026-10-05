@@ -2,13 +2,15 @@ import Link from "next/link";
 import { BrandMark } from "./brand-mark";
 import { cn } from "@/lib/utils";
 
+const HEADER_SYMBOL = "/brand/helphub-symbol-clean.ico";
+
 type BrandLockupProps = {
   href?: string;
   priority?: boolean;
   onClick?: () => void;
   className?: string;
-  wordmarkClassName?: string;
   markClassName?: string;
+  symbol?: boolean;
 };
 
 export function BrandLockup({
@@ -16,24 +18,33 @@ export function BrandLockup({
   priority = false,
   onClick,
   className,
-  wordmarkClassName,
   markClassName,
+  symbol = false,
 }: BrandLockupProps) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className={cn("flex items-center gap-2", className)}
+      className={cn("flex items-center", symbol && "gap-2", className)}
     >
-      <BrandMark priority={priority} className={markClassName} />
-      <span
-        className={cn(
-          "text-xl font-bold tracking-[-0.06em] text-foreground",
-          wordmarkClassName,
-        )}
-      >
-        HelpHub
-      </span>
+      {symbol ? (
+        <>
+          <img
+            src={HEADER_SYMBOL}
+            alt=""
+            width={40}
+            height={40}
+            className={cn("h-10 w-10 shrink-0 object-contain", markClassName)}
+            decoding="async"
+            fetchPriority={priority ? "high" : "auto"}
+          />
+          <span className="text-xl font-bold tracking-[-0.06em] text-foreground">
+            HelpHub
+          </span>
+        </>
+      ) : (
+        <BrandMark priority={priority} className={markClassName} />
+      )}
     </Link>
   );
 }
