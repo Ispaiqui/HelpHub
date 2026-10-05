@@ -20,6 +20,10 @@
   /* ~8% cada lado (antes 5%). Só itens: texto, carousel, botões, animações. Fundo da seção full-bleed. */
   --hh-page-gutter: max(1.25rem, 8%);
   --hh-header-height: 4.3125rem;
+  /* Carga e deslize. O carrossel de etapas lê os mesmos tokens. */
+  --hh-charge-ms: 240ms;
+  --hh-slide-ms: 700ms;
+  --hh-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dark {
@@ -98,8 +102,6 @@
     var(--hh-step-width) - var(--hh-icon-size) / 2 * (var(--hh-active-scale) + var(--hh-side-scale))
   );
   --hh-beam-width: calc(var(--hh-energy-gap) * 0.4);
-  --hh-charge-ms: 240ms;
-  --hh-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --hh-travel-ease: cubic-bezier(0.45, 0, 0.25, 1);
   position: relative;
   min-height: 300px;
@@ -396,11 +398,60 @@
   opacity: 1;
 }
 
+/* Carga = ícone da etapa. Deslize = card da etapa.
+   translate/scale: Tailwind 4 não usa o shorthand transform. */
+.hh-charge {
+  transition-property: opacity, color, transform, translate, scale;
+  transition-duration: var(--hh-charge-ms);
+  transition-timing-function: var(--hh-ease);
+}
+
+.hh-charge::before {
+  transition: opacity var(--hh-charge-ms) var(--hh-ease);
+}
+
+/* Mesma carga do ícone da etapa: camada ::before por opacidade. */
+.hh-fill {
+  position: relative;
+  isolation: isolate;
+}
+
+.hh-fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: var(--hh-fill, var(--primary-hover));
+  opacity: 0;
+  transition: opacity var(--hh-charge-ms) var(--hh-ease);
+}
+
+@media (hover: hover) {
+  .hh-fill:hover::before {
+    opacity: 1;
+  }
+}
+
+.hh-slide {
+  transition-property: transform, opacity, translate, scale;
+  transition-duration: var(--hh-slide-ms);
+  transition-timing-function: var(--hh-ease);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hh-steps__trail,
   .hh-steps__beam {
     animation: none !important;
     opacity: 0;
+  }
+
+  .hh-charge,
+  .hh-charge::before,
+  .hh-fill::before,
+  .hh-slide {
+    transition: none;
   }
 }
 
