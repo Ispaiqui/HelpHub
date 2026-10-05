@@ -98,5 +98,19 @@ export type PinScrubStageProps = {
   reducedFallback?: ReactNode;
   /** Dispara no scrub. Só DOM — sem state React. */
   onProgress?: (progress: number) => void;
+  /**
+   * Bloco do fim do beat hero (texto, botões).
+   * Opacidade sobe no último trecho. Clique só com o scrub no fim.
+   */
+  endSlot?: ReactNode;
+  /** Eyebrow, título e barra de progresso. Padrão true (lab). */
+  showChrome?: boolean;
+  /** Classes do quadro pinado (z-index, respiro do header). */
+  pinClassName?: string;
+  /**
+   * Fração final da pista sem mudança visual.
+   * Segura o pin depois que o `endSlot` já está na tela.
+   */
+  endHold?: number;
   children?: ReactNode;
 };

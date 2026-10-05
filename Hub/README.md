@@ -11,7 +11,7 @@
 
 ## Lab Premium (pin / scrub)
 
-Capítulo interno para ver e ajustar a animação Premium no IDE. A home e as outras páginas públicas não montam esta cena.
+Capítulo interno para ver e ajustar a animação Premium no IDE. O hero público monta a mesma cena pin/scrub. As outras páginas públicas não montam.
 
 1. Na raiz: `pnpm dev` (ou `pnpm --dir Hub dev`)
 2. Abra `/lab/premium` — [http://localhost:3000/lab/premium](http://localhost:3000/lab/premium)

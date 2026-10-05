@@ -1,6 +1,6 @@
 /**
  * Brief da animação Premium — superfície única de ajuste no IDE.
- * A rota /lab/premium lê este arquivo. A home pública não lê.
+ * A rota /lab/premium e o hero público leem este arquivo.
  *
  * Campos: cor · objetos · intuito · marca (+ copy dos callouts).
  * Hex alinhados aos tokens HelpHub (design system):

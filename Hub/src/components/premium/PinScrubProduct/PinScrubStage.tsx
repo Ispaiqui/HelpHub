@@ -53,10 +53,14 @@ export function PinScrubStage({
   tagline = "Uma HUB para o seu negócio.",
   badge = "pin + scrub",
   showProgress = true,
+  showChrome = true,
   className = "",
+  pinClassName = "",
+  endHold = 0,
   backdrop,
   reducedFallback,
   onProgress,
+  endSlot,
   children,
 }: PinScrubStageProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -86,6 +90,18 @@ export function PinScrubStage({
   }, [beats, onProgress, proxyDetails, proxyEnter, proxyFrom, proxyHero, scrub]);
   const reduced = useSyncExternalStore(subscribeReducedMotion, readReducedMotion, () => false);
   const [ready, setReady] = useState(false);
+  const [endLive, setEndLive] = useState(false);
+  const endLiveRef = useRef(false);
+  const endLiveAtRef = useRef(0.99);
+
+  const syncEndInteractive = useCallback((progress: number) => {
+    const root = rootRef.current;
+    if (!root?.querySelector("[data-end-slot]")) return;
+    const on = progress >= endLiveAtRef.current;
+    if (on === endLiveRef.current) return;
+    endLiveRef.current = on;
+    setEndLive(on);
+  }, []);
 
   const showFinalState = useCallback(() => {
     const root = rootRef.current;
@@ -103,12 +119,15 @@ export function PinScrubStage({
     gsap.set(calloutEls, { opacity: 0, x: 0 });
     gsap.set(lineEls, { opacity: 0, scaleX: 0 });
     gsap.set(dotEls, { opacity: 0, scale: 0 });
-    gsap.set([taglineEl, badgeEl], { opacity: 1, y: 0 });
-    gsap.set(hintEl, { opacity: 0 });
+    const endEl = root.querySelector<HTMLElement>("[data-end-slot]");
+    const copyEls = [taglineEl, badgeEl, endEl].filter((el): el is HTMLElement => el instanceof HTMLElement);
+    if (copyEls.length) gsap.set(copyEls, { opacity: 1, y: 0 });
+    if (hintEl) gsap.set(hintEl, { opacity: 0 });
     if (progressFillRef.current) progressFillRef.current.style.width = "100%";
     if (progressLabelRef.current) progressLabelRef.current.textContent = "100%";
     onProgressRef.current?.(1);
-  }, []);
+    syncEndInteractive(1);
+  }, [syncEndInteractive]);
 
   useGSAP(
     () => {
@@ -121,6 +140,9 @@ export function PinScrubStage({
       const root = rootRef.current;
       const pin = pinRef.current;
       if (!root || !pin) return;
+
+      const hold = Math.min(0.4, Math.max(0, endHold));
+      endLiveAtRef.current = hold > 0 ? 1 - hold : 0.99;
 
       const {
         beats: b,
@@ -143,6 +165,8 @@ export function PinScrubStage({
       const taglineEl = root.querySelector<HTMLElement>("[data-tagline]");
       const badgeEl = root.querySelector<HTMLElement>("[data-badge]");
       const hintEl = root.querySelector<HTMLElement>("[data-hint]");
+      const endEl = root.querySelector<HTMLElement>("[data-end-slot]");
+      const copyEls = [taglineEl, badgeEl].filter((el): el is HTMLElement => el instanceof HTMLElement);
 
       gsap.set(calloutEls, {
         opacity: 0,
@@ -156,8 +180,10 @@ export function PinScrubStage({
         });
       });
       gsap.set(dotEls, { opacity: 0, scale: 0 });
-      gsap.set([taglineEl, badgeEl], { opacity: 0, y: 18 });
-      gsap.set(hintEl, { opacity: 1 });
+      if (copyEls.length) gsap.set(copyEls, { opacity: 0, y: 18 });
+      if (endEl) gsap.set(endEl, { opacity: 0, y: 18 });
+      if (hintEl) gsap.set(hintEl, { opacity: 1 });
+      syncEndInteractive(0);
 
       Object.assign(premiumScene.proxy, from);
       const proxy = premiumScene.proxy;
@@ -191,6 +217,7 @@ export function PinScrubStage({
               hintEl.style.opacity = String(hintOpacity);
             }
             onProgressRef.current?.(p);
+            syncEndInteractive(p);
           },
         },
       });
@@ -286,23 +313,38 @@ export function PinScrubStage({
         },
         heroStart + retract * 0.3,
       );
-      tl.to(
-        taglineEl,
-        { opacity: 1, y: 0, duration: heroDur * 0.35 },
-        heroStart + heroDur * 0.35,
-      );
-      tl.to(
-        badgeEl,
-        { opacity: 1, y: 0, duration: heroDur * 0.3 },
-        heroStart + heroDur * 0.45,
-      );
+      if (taglineEl) {
+        tl.to(
+          taglineEl,
+          { opacity: 1, y: 0, duration: heroDur * 0.35 },
+          heroStart + heroDur * 0.35,
+        );
+      }
+      if (badgeEl) {
+        tl.to(
+          badgeEl,
+          { opacity: 1, y: 0, duration: heroDur * 0.3 },
+          heroStart + heroDur * 0.45,
+        );
+      }
+      if (endEl) {
+        tl.to(
+          endEl,
+          { opacity: 1, y: 0, duration: heroDur * 0.28 },
+          heroStart + heroDur * 0.72,
+        );
+      }
+      if (hold > 0) {
+        const pad = { t: 0 };
+        tl.to(pad, { t: 1, duration: hold, ease: "none" }, 1 - hold);
+      }
 
       return () => {
         tl.scrollTrigger?.kill();
         tl.kill();
       };
     },
-    { scope: rootRef, dependencies: [showFinalState, runwayVh, reduced] },
+    { scope: rootRef, dependencies: [showFinalState, runwayVh, reduced, endHold] },
   );
 
   return (
@@ -314,7 +356,7 @@ export function PinScrubStage({
         <div
           ref={pinRef}
           data-pin
-          className="relative flex h-[100dvh] flex-col overflow-hidden"
+          className={`relative z-10 flex h-[100dvh] flex-col overflow-hidden ${pinClassName}`}
           style={{ backgroundColor: "var(--lab-bg, #0f172a)" }}
         >
           {backdrop ? (
@@ -323,43 +365,55 @@ export function PinScrubStage({
             </div>
           ) : null}
 
-          <header className="relative z-30 flex shrink-0 items-center justify-between gap-4 px-4 py-5 sm:px-6 lg:px-8">
-            <div>
-              <p className="font-sans text-[10px] uppercase tracking-[0.22em] opacity-60">
-                {eyebrow}
-              </p>
-              <h1 className="mt-1 font-sans text-2xl font-bold tracking-tight sm:text-[1.75rem]">
-                {title}
-              </h1>
-            </div>
-            {showProgress ? (
-              <div className="flex min-w-[7.5rem] flex-col items-end gap-1.5">
-                <span
-                  ref={progressLabelRef}
-                  className="font-sans text-[10px] uppercase tracking-[0.18em] opacity-60"
-                >
-                  0%
-                </span>
-                <div className="h-1 w-28 overflow-hidden rounded-full bg-[color:color-mix(in_srgb,var(--lab-ink,#f8fafc)_14%,transparent)]">
-                  <div
-                    ref={progressFillRef}
-                    data-progress-fill
-                    className="h-full w-0 rounded-full bg-[color:var(--lab-accent,#60a5fa)]"
-                  />
-                </div>
+          {showChrome ? (
+            <header className="relative z-30 flex shrink-0 items-center justify-between gap-4 px-4 py-5 sm:px-6 lg:px-8">
+              <div>
+                <p className="font-sans text-[10px] uppercase tracking-[0.22em] opacity-60">
+                  {eyebrow}
+                </p>
+                <h1 className="mt-1 font-sans text-2xl font-bold tracking-tight sm:text-[1.75rem]">
+                  {title}
+                </h1>
               </div>
+              {showProgress ? (
+                <div className="flex min-w-[7.5rem] flex-col items-end gap-1.5">
+                  <span
+                    ref={progressLabelRef}
+                    className="font-sans text-[10px] uppercase tracking-[0.18em] opacity-60"
+                  >
+                    0%
+                  </span>
+                  <div className="h-1 w-28 overflow-hidden rounded-full bg-[color:color-mix(in_srgb,var(--lab-ink,#f8fafc)_14%,transparent)]">
+                    <div
+                      ref={progressFillRef}
+                      data-progress-fill
+                      className="h-full w-0 rounded-full bg-[color:var(--lab-accent,#60a5fa)]"
+                    />
+                  </div>
+                </div>
+              ) : null}
+            </header>
+          ) : null}
+
+          <div
+            className={`relative z-10 mx-auto flex min-h-0 w-full flex-1 flex-col ${
+              endSlot ? "" : "max-w-5xl items-center justify-center px-4 pb-8 sm:px-8"
+            }`}
+          >
+            {hint ? (
+              <p
+                data-hint
+                className="pointer-events-none absolute top-1 z-20 font-sans text-[10px] uppercase tracking-[0.22em] opacity-60 sm:top-2"
+              >
+                {hint}
+              </p>
             ) : null}
-          </header>
 
-          <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-4 pb-8 sm:px-8">
-            <p
-              data-hint
-              className="pointer-events-none absolute top-1 z-20 font-sans text-[10px] uppercase tracking-[0.22em] opacity-60 sm:top-2"
+            <div
+              className={
+                endSlot ? "absolute inset-0" : "relative h-[min(58vh,520px)] w-full"
+              }
             >
-              {hint}
-            </p>
-
-            <div className="relative h-[min(58vh,520px)] w-full">
               {callouts.length > 0 ? <CalloutOverlay callouts={callouts} /> : null}
 
               <div className="absolute inset-0 z-10">
@@ -371,21 +425,33 @@ export function PinScrubStage({
               </div>
             </div>
 
-            <div className="relative z-20 mt-2 flex min-h-[4.75rem] max-w-xl flex-col items-center gap-3 px-2 text-center">
-              <p
-                data-tagline
-                className="font-sans text-xl font-bold leading-snug tracking-tight opacity-0 sm:text-3xl"
+            {endSlot ? (
+              <div
+                data-end-slot
+                inert={!endLive}
+                className={`absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-[var(--lab-bg,#0f172a)] via-[var(--lab-bg,#0f172a)]/88 to-transparent px-4 pt-16 pb-6 text-center opacity-0 sm:px-8 sm:pb-8 ${
+                  endLive ? "pointer-events-auto" : "pointer-events-none"
+                }`}
               >
-                {tagline}
-              </p>
-              <span
-                data-badge
-                className="inline-flex items-center gap-2 rounded-full border border-[color:color-mix(in_srgb,var(--lab-accent,#60a5fa)_45%,transparent)] bg-[color:color-mix(in_srgb,var(--lab-ink,#f8fafc)_6%,transparent)] px-3 py-1 font-sans text-[10px] uppercase tracking-[0.2em] opacity-0"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--lab-accent,#60a5fa)]" />
-                {badge}
-              </span>
-            </div>
+                {endSlot}
+              </div>
+            ) : (
+              <div className="relative z-20 mt-2 flex min-h-[4.75rem] max-w-xl flex-col items-center gap-3 self-center px-2 text-center">
+                <p
+                  data-tagline
+                  className="font-sans text-xl font-bold leading-snug tracking-tight opacity-0 sm:text-3xl"
+                >
+                  {tagline}
+                </p>
+                <span
+                  data-badge
+                  className="inline-flex items-center gap-2 rounded-full border border-[color:color-mix(in_srgb,var(--lab-accent,#60a5fa)_45%,transparent)] bg-[color:color-mix(in_srgb,var(--lab-ink,#f8fafc)_6%,transparent)] px-3 py-1 font-sans text-[10px] uppercase tracking-[0.2em] opacity-0"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--lab-accent,#60a5fa)]" />
+                  {badge}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
