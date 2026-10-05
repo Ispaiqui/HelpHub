@@ -1,14 +1,6 @@
-import { createRequire } from "node:module";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-
-const require = createRequire(
-  new URL(
-    "../node_modules/.pnpm/sharp@0.35.4_@types+node@20.19.43/node_modules/sharp/package.json",
-    import.meta.url
-  )
-);
-const sharp = require("sharp");
+import sharp from "sharp";
 
 const root = path.resolve(import.meta.dirname, "..");
 const src = path.join(root, "public", "helplogoo.jpeg");
@@ -105,7 +97,9 @@ for (let i = 0; i < out.length; i += punched.info.channels) {
   const r = out[i];
   const g = out[i + 1];
   const b = out[i + 2];
-  if (r > 248 && g > 248 && b > 248) out[i + 3] = 0;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  if (max > 236 && max - min < 36) out[i + 3] = 0;
 }
 
 const transparent = await sharp(out, {
@@ -148,19 +142,21 @@ const publicBrand = path.join(root, "public", "brand");
 const appDir = path.join(root, "src", "app");
 await mkdir(publicBrand, { recursive: true });
 
-const mark80 = await sharp(transparent)
-  .resize(80, 80, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
-  .webp({ quality: 82, effort: 6 })
-  .toBuffer();
-
-const mark160 = await sharp(transparent)
-  .resize(160, 160, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
-  .webp({ quality: 82, effort: 6 })
+const cropped = await sharp(transparent).metadata();
+const markSide = Math.min(1024, Math.max(cropped.width ?? 512, cropped.height ?? 512));
+const mark = await sharp(transparent)
+  .resize(markSide, markSide, {
+    fit: "contain",
+    background: { r: 0, g: 0, b: 0, alpha: 0 },
+    kernel: "lanczos3",
+    withoutEnlargement: true,
+  })
+  .webp({ lossless: true, effort: 6 })
   .toBuffer();
 
 const darkMark = await lightenForDark(transparent);
 
-await writeFile(path.join(publicBrand, "helphub-mark.webp"), mark80);
+await writeFile(path.join(publicBrand, "helphub-mark.webp"), mark);
 await writeFile(path.join(publicBrand, "favicon-light.png"), await squarePad(transparent, 32));
 await writeFile(path.join(publicBrand, "favicon-dark.png"), await squarePad(darkMark, 32));
 await writeFile(path.join(appDir, "icon.png"), await squarePad(transparent, 32));
@@ -202,7 +198,7 @@ function pngToIco(pngBuffers, sizes) {
 await writeFile(path.join(appDir, "favicon.ico"), pngToIco([icoPng16, icoPng32], [16, 32]));
 
 console.log("wrote", {
-  mark80: mark80.length,
-  mark160: mark160.length,
+  mark: mark.length,
+  markSide,
   icon: (await squarePad(transparent, 32)).length,
 });

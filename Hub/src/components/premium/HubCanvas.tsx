@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useMemo, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import type { AnimationBriefObjeto } from "@/lib/animation-brief";
@@ -39,12 +39,17 @@ function satelliteSpecs(objetos: AnimationBriefObjeto[]): SatelliteSpec[] {
 
 function Mark() {
   const source = useTexture("/brand/helphub-mark.webp");
+  const gl = useThree((state) => state.gl);
   const texture = useMemo(() => {
     const next = source.clone();
     next.colorSpace = THREE.SRGBColorSpace;
+    next.anisotropy = gl.capabilities.getMaxAnisotropy();
+    next.magFilter = THREE.LinearFilter;
+    next.minFilter = THREE.LinearMipmapLinearFilter;
+    next.generateMipmaps = true;
     next.needsUpdate = true;
     return next;
-  }, [source]);
+  }, [gl, source]);
 
   return (
     <sprite position={[0, 0.02, 0.58]} scale={[0.92, 0.92, 1]}>

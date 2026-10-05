@@ -48,6 +48,7 @@ export function HubFallback({ objetos }: HubFallbackProps) {
         alt=""
         width={112}
         height={112}
+        unoptimized
         className="absolute top-1/2 left-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 object-contain sm:h-28 sm:w-28"
       />
     </div>
