@@ -25,23 +25,29 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/brand/helphub-symbol-light-theme.ico",
-        type: "image/x-icon",
+        url: "/brand/helphub-symbol-light-32.png",
+        type: "image/png",
+        sizes: "32x32",
         media: "(prefers-color-scheme: light)",
       },
       {
-        url: "/brand/helphub-symbol-clean.ico",
-        type: "image/x-icon",
+        url: "/brand/helphub-symbol-dark-32.png",
+        type: "image/png",
+        sizes: "32x32",
         media: "(prefers-color-scheme: dark)",
       },
     ],
     apple: [
       {
-        url: "/helphub-logo-light-theme.png",
+        url: "/brand/apple-touch-icon-light-180.png",
+        type: "image/png",
+        sizes: "180x180",
         media: "(prefers-color-scheme: light)",
       },
       {
-        url: "/helphub-logo-clean.png",
+        url: "/brand/apple-touch-icon-dark-180.png",
+        type: "image/png",
+        sizes: "180x180",
         media: "(prefers-color-scheme: dark)",
       },
     ],

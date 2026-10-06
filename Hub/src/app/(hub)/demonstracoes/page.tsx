@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Catalog } from "@/components/helphub/sections";
+import { Catalog } from "@/components/helphub/sections/catalog";
 
 export const metadata: Metadata = {
   title: "Demonstrações",
