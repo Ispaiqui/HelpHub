@@ -2,7 +2,7 @@ import Link from "next/link";
 import { BrandMark } from "./brand-mark";
 import { cn } from "@/lib/utils";
 
-const HEADER_SYMBOL = "/brand/helphub-symbol-clean.ico";
+const HEADER_SYMBOL = "/brand/helphub-symbol-128.webp";
 
 type BrandLockupProps = {
   href?: string;
@@ -29,8 +29,11 @@ export function BrandLockup({
     >
       {symbol ? (
         <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={HEADER_SYMBOL}
+            srcSet={`${HEADER_SYMBOL} 128w`}
+            sizes="40px"
             alt=""
             width={40}
             height={40}

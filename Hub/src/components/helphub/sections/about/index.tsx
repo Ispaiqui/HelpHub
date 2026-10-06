@@ -9,7 +9,7 @@ const successCases = [
   {
     name: "Magus Play",
     href: "https://buyhypestore.com/magus-play/",
-    icon: "/cases/magus-play.jpg",
+    icon: "/cases/magus-play.webp",
     crop: 1.24,
     glow: "radial-gradient(circle, #e0f7ff 0%, #38bdf8 42%, transparent 70%)",
   },
@@ -71,9 +71,14 @@ export function AboutVision() {
                             style={{ background: item.glow }}
                           />
                           <span className="hh-charge relative z-10 block h-full w-full overflow-hidden rounded-full group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-primary">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={item.icon}
                               alt=""
+                              width={224}
+                              height={224}
+                              loading="lazy"
+                              decoding="async"
                               className="h-full w-full object-cover"
                               style={{ transform: `scale(${item.crop})` }}
                             />

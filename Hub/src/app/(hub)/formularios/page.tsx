@@ -1,4 +1,4 @@
-import { Contact } from "@/components/helphub/sections";
+import { Contact } from "@/components/helphub/sections/contact";
 
 export default function FormulariosPage() {
   return <Contact />;
