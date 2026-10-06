@@ -1,85 +1,34 @@
 "use client";
 
+/* Posters já são WebP no tamanho do master; next/image reamostraria o crop. */
+/* eslint-disable @next/next/no-img-element */
+
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Search, Lightbulb, Code, Headphones, AlertTriangle, LucideIcon } from "lucide-react";
+import { aboutSteps } from "./about-step-content";
+import media from "./about-step-media.json";
+import "./about-step-video.css";
 
-export interface StepItem {
-  name: string;
-  description: string;
-  icon: LucideIcon;
-}
-
-const steps: StepItem[] = [
-  { name: "Problema", description: "1. Entendemos a sua dor", icon: AlertTriangle },
-  { name: "Análise", description: "2. Mapeamos o cenário", icon: Search },
-  { name: "Solução", description: "3. Propomos a tecnologia", icon: Lightbulb },
-  { name: "Implementação", description: "4. Colocamos em prática", icon: Code },
-  { name: "Suporte", description: "5. Acompanhamos você", icon: Headphones },
-];
-
-const SLIDE_MS = 700;
-const ENERGY_MS = 500;
-const CHARGE_MS = 180;
-const HOLD_MS = 4000;
-const EASE = "ease-[cubic-bezier(0.22,1,0.36,1)]";
-const MOVE = `transition-[transform,opacity] duration-700 ${EASE}`;
-const CHARGE = `transition-[background-color,box-shadow,color,opacity,ring-color,ring-width] duration-200 ${EASE}`;
-
-/** Slots posicionais definidos em globals.css (.hh-steps__card--*): cada um
- *  desloca o card em múltiplos da própria largura, nunca da largura do palco. */
-const SLOT = {
-  farLeft: "hh-steps__card--far-left",
-  left: "hh-steps__card--left",
-  center: "hh-steps__card--center",
-  right: "hh-steps__card--right",
-  farRight: "hh-steps__card--far-right",
-} as const;
-
-type Phase = "idle" | "energy" | "charged" | "sliding";
-
-const getStepClasses = (
-  i: number,
-  activeIndex: number,
-  phase: Phase,
-  frozen: boolean,
-  stepsCount: number,
-) => {
-  const nextIndex = (activeIndex + 1) % stepsCount;
-  const prevIndex = (activeIndex - 1 + stepsCount) % stepsCount;
-  const nextNextIndex = (activeIndex + 2) % stepsCount;
-  const sliding = phase === "sliding";
-  const moveClass = frozen ? "transition-none" : MOVE;
-
-  let posClass: string = SLOT.farRight;
-  let transitionClass = "transition-none";
-  let isCharged = false;
-
-  if (i === activeIndex) {
-    transitionClass = moveClass;
-    posClass = sliding ? SLOT.left : SLOT.center;
-    isCharged = phase === "idle" || phase === "energy";
-  } else if (i === nextIndex) {
-    transitionClass = moveClass;
-    posClass = sliding ? SLOT.center : SLOT.right;
-    isCharged = phase === "charged" || phase === "sliding";
-  } else if (i === prevIndex) {
-    transitionClass = moveClass;
-    posClass = sliding ? SLOT.farLeft : SLOT.left;
-  } else if (i === nextNextIndex) {
-    transitionClass = sliding && !frozen ? MOVE : "transition-none";
-    posClass = sliding ? SLOT.right : SLOT.farRight;
-  }
-
-  return { posClass, transitionClass, isCharged };
+type ThemeMedia = {
+  mp4: string;
+  webm: string;
+  poster: string;
 };
 
-export function AboutStep() {
-  const stageRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [phase, setPhase] = useState<Phase>("idle");
-  const [frozen, setFrozen] = useState(false);
-  const [playing, setPlaying] = useState(false);
-  const reducedMotion = useSyncExternalStore(
+type Playback = {
+  mobile: boolean;
+  dark: boolean;
+  sources: ThemeMedia;
+};
+
+function isDocumentDark() {
+  const root = document.documentElement;
+  if (root.classList.contains("dark")) return true;
+  if (root.classList.contains("light")) return false;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function useReducedMotion() {
+  return useSyncExternalStore(
     (onStoreChange) => {
       const query = window.matchMedia("(prefers-reduced-motion: reduce)");
       query.addEventListener("change", onStoreChange);
@@ -88,151 +37,162 @@ export function AboutStep() {
     () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     () => false,
   );
-  const paused = !playing || reducedMotion;
+}
+
+let playbackCache: Playback | null = null;
+let playbackKey = "";
+
+function readPlaybackCached(): Playback {
+  const mobile = window.matchMedia("(max-width: 639px)").matches;
+  const dark = isDocumentDark();
+  const key = `${mobile}:${dark}`;
+  if (playbackCache && playbackKey === key) return playbackCache;
+  const bucket = mobile ? media.mobile : media.desktop;
+  playbackCache = {
+    mobile,
+    dark,
+    sources: dark ? bucket.dark : bucket.light,
+  };
+  playbackKey = key;
+  return playbackCache;
+}
+
+function subscribePlayback(onChange: () => void) {
+  const mobileQuery = window.matchMedia("(max-width: 639px)");
+  const colorQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  mobileQuery.addEventListener("change", onChange);
+  colorQuery.addEventListener("change", onChange);
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  return () => {
+    mobileQuery.removeEventListener("change", onChange);
+    colorQuery.removeEventListener("change", onChange);
+    observer.disconnect();
+  };
+}
+
+function usePlayback() {
+  return useSyncExternalStore(subscribePlayback, readPlaybackCached, () => null);
+}
+
+/**
+ * Vídeo pré-renderizado do carrossel. O arquivo é mais largo que a coluna
+ * e fica centralizado: a máscara e o overflow reproduzem o corte de cada largura
+ * sem escalar os cards. Tema e breakpoint escolhem o arquivo.
+ */
+export function AboutStep() {
+  const stageRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const reducedMotion = useReducedMotion();
+  const playback = usePlayback();
+  const [near, setNear] = useState(false);
 
   useEffect(() => {
-    const el = stageRef.current;
-    if (!el) return;
-
-    let inView = false;
-    let pageVisible = document.visibilityState === "visible";
-
-    const sync = () => {
-      setPlaying(inView && pageVisible);
-    };
+    const stage = stageRef.current;
+    if (!stage || reducedMotion) return;
 
     const io = new IntersectionObserver(
       ([entry]) => {
-        inView = entry.isIntersecting;
-        sync();
+        if (entry.isIntersecting) setNear(true);
+        const video = videoRef.current;
+        if (!video) return;
+        if (entry.isIntersecting && document.visibilityState === "visible") {
+          void video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
       },
-      { threshold: 0.2 },
+      { rootMargin: "240px 0px", threshold: 0.15 },
     );
 
-    const onVisibility = () => {
-      pageVisible = document.visibilityState === "visible";
-      sync();
-    };
-
-    io.observe(el);
-    document.addEventListener("visibilitychange", onVisibility);
-
-    return () => {
-      io.disconnect();
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
-  }, []);
+    io.observe(stage);
+    return () => io.disconnect();
+  }, [reducedMotion, playback?.sources.mp4]);
 
   useEffect(() => {
-    // PT-BR: com "reduzir movimento" ativo a etapa atual fica estática,
-    // sem ciclo automático e sem transições.
-    if (paused) {
-      return;
-    }
+    const video = videoRef.current;
+    if (!video || !near || reducedMotion) return;
 
-    let cancelled = false;
-    let timers: ReturnType<typeof setTimeout>[] = [];
-    const later = (ms: number, fn: () => void) => {
-      timers.push(setTimeout(fn, ms));
+    const onVisibility = () => {
+      if (document.hidden) {
+        video.pause();
+        return;
+      }
+      void video.play().catch(() => {});
     };
 
-    const frame = requestAnimationFrame(() => {
-      if (cancelled) return;
-      setFrozen(false);
-    });
+    document.addEventListener("visibilitychange", onVisibility);
+    void video.play().catch(() => {});
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [near, reducedMotion, playback?.sources.mp4]);
 
-    const cycle = () => {
-      if (cancelled) return;
-
-      // Todos os timers do ciclo anterior já dispararam neste ponto.
-      timers = [];
-
-      setPhase("energy");
-
-      later(ENERGY_MS, () => {
-        if (cancelled) return;
-        setPhase("charged");
-      });
-
-      later(ENERGY_MS + CHARGE_MS, () => {
-        if (cancelled) return;
-        setPhase("sliding");
-      });
-
-      later(ENERGY_MS + CHARGE_MS + SLIDE_MS, () => {
-        if (cancelled) return;
-        setActiveIndex((prev) => (prev + 1) % steps.length);
-        setPhase("idle");
-        later(HOLD_MS, cycle);
-      });
-    };
-
-    later(HOLD_MS, cycle);
-
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(frame);
-      timers.forEach(clearTimeout);
-    };
-  }, [paused]);
-
-  const displayPhase = paused ? "idle" : phase;
-  const displayFrozen = paused || frozen;
+  const showVideo = !reducedMotion && near && playback !== null;
 
   return (
-    <div className="hh-steps mt-10 select-none px-2 sm:px-4">
-      <div
-        ref={stageRef}
-        className="hh-steps__stage min-h-[280px] sm:min-h-[300px]"
-      >
-        <div className="hh-steps__rail" />
+    <div className="mt-10 select-none px-2 sm:px-4">
+      <div ref={stageRef} className="hh-about-stage">
+        <img
+          src={media.mobile.light.poster}
+          alt=""
+          className="hh-about-frame hh-about-frame--mobile-light"
+          decoding="async"
+          loading="lazy"
+        />
+        <img
+          src={media.desktop.light.poster}
+          alt=""
+          className="hh-about-frame hh-about-frame--desktop-light"
+          decoding="async"
+          loading="lazy"
+        />
+        <img
+          src={media.mobile.dark.poster}
+          alt=""
+          className="hh-about-frame hh-about-frame--mobile-dark"
+          decoding="async"
+          loading="lazy"
+        />
+        <img
+          src={media.desktop.dark.poster}
+          alt=""
+          className="hh-about-frame hh-about-frame--desktop-dark"
+          decoding="async"
+          loading="lazy"
+        />
 
-        <div className="hh-steps__beam-track">
-          {displayPhase === "energy" && <div className="hh-steps__beam" />}
-        </div>
+        {showVideo && (
+          <video
+            ref={videoRef}
+            key={playback.sources.mp4}
+            className="hh-about-frame hh-about-video"
+            style={{
+              display: "block",
+              aspectRatio: playback.mobile
+                ? `${media.mobile.width} / ${media.mobile.height}`
+                : `${media.desktop.width} / ${media.desktop.height}`,
+            }}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={playback.sources.poster}
+            disablePictureInPicture
+            aria-hidden="true"
+            tabIndex={-1}
+          >
+            <source src={playback.sources.webm} type="video/webm" />
+            <source src={playback.sources.mp4} type="video/mp4" />
+          </video>
+        )}
 
-        {steps.map((step, i) => {
-          const { posClass, transitionClass, isCharged } = getStepClasses(
-            i,
-            activeIndex,
-            displayPhase,
-            displayFrozen,
-            steps.length,
-          );
-          const Icon = step.icon;
-
-          return (
-            <div
-              key={step.name}
-              className={`hh-steps__card ${transitionClass} ${posClass}`}
-            >
-              <div
-                className={`
-                  relative z-[1] flex h-20 w-20 items-center justify-center overflow-hidden rounded-full
-                  ${CHARGE}
-                  ${isCharged
-                    ? "bg-hh-blue-500 shadow-md"
-                    : "bg-card ring-1 ring-border shadow-lg"}
-                `}
-              >
-                <div
-                  className={`absolute inset-0 rounded-full bg-gradient-to-tr from-hh-blue-600 to-hh-blue-400 ${CHARGE} ${isCharged ? "opacity-100" : "opacity-0"}`}
-                />
-
-                <Icon
-                  className={`relative z-10 h-7 w-7 ${CHARGE} ${isCharged ? "text-white" : "text-muted-foreground"}`}
-                />
-              </div>
-
-              <h3 className={`mt-5 text-base font-bold ${CHARGE} ${isCharged ? "text-foreground" : "text-muted-foreground"}`}>
-                {step.name}
-              </h3>
-              <p className={`mt-2 text-center text-sm leading-relaxed text-muted-foreground ${CHARGE} ${isCharged ? "opacity-100" : "opacity-70"}`}>
-                {step.description}
-              </p>
-            </div>
-          );
-        })}
+        <ol className="sr-only">
+          {aboutSteps.map((step) => (
+            <li key={step.name}>
+              {step.name}. {step.description}
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   );

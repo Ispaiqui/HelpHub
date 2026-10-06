@@ -17,7 +17,8 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "check": "pnpm run typecheck && pnpm run lint",
-    "optimize:brand": "node scripts/optimize-brand-mark.mjs"
+    "optimize:brand": "node scripts/optimize-brand-mark.mjs",
+    "capture:about-steps": "node scripts/capture-about-steps.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -49,6 +50,7 @@
     "@types/three": "0.186.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.2",
+    "playwright-core": "^1.63.0",
     "shadcn": "^4.19.0",
     "sharp": "^0.35.4",
     "tailwindcss": "^4",

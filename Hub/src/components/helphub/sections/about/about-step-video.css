@@ -1,0 +1,66 @@
+.hh-about-stage {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+}
+
+@media (min-width: 640px) {
+  .hh-about-stage {
+    height: 300px;
+  }
+}
+
+.hh-about-frame {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: none;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  transform: translateX(-50%);
+  pointer-events: none;
+  user-select: none;
+}
+
+.hh-about-frame--mobile-light {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .hh-about-frame--mobile-light {
+    display: none;
+  }
+
+  .hh-about-frame--desktop-light {
+    display: block;
+  }
+}
+
+.dark .hh-about-frame--mobile-light,
+.dark .hh-about-frame--desktop-light {
+  display: none;
+}
+
+.dark .hh-about-frame--mobile-dark {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .dark .hh-about-frame--mobile-dark {
+    display: none;
+  }
+
+  .dark .hh-about-frame--desktop-dark {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hh-about-video {
+    display: none !important;
+  }
+}

@@ -1,0 +1,170 @@
+/* Carrossel de etapas — só a rota de captura importa este arquivo.
+   Os cards têm largura fixa (--hh-step-width) e os slots deslocam em
+   múltiplos dessa largura. O movimento fica em transform/opacity. */
+
+.hh-steps {
+  --hh-step-width: 180px;
+  --hh-beam-width: 52px;
+  --hh-icon-size: 80px;
+  /* Eixo dos ícones: padding-top do card (60px) + metade do ícone (40px) */
+  --hh-step-axis: 100px;
+}
+
+@media (max-width: 639px) {
+  .hh-steps {
+    --hh-step-width: 148px;
+  }
+}
+
+.hh-steps__stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+}
+
+.hh-steps__rail {
+  position: absolute;
+  top: var(--hh-step-axis);
+  left: 50%;
+  z-index: 0;
+  height: 2px;
+  width: calc(var(--hh-step-width) * 3);
+  transform: translate(-50%, -50%);
+  background: var(--border);
+  pointer-events: none;
+}
+
+.hh-steps__beam-track {
+  position: absolute;
+  top: var(--hh-step-axis);
+  left: 50%;
+  z-index: 0;
+  height: 16px;
+  width: calc(var(--hh-step-width) - var(--hh-icon-size));
+  transform: translate(calc(var(--hh-icon-size) / 2), -50%);
+  pointer-events: none;
+}
+
+.hh-steps__beam {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 3px;
+  width: var(--hh-beam-width);
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--hh-blue-600) 35%,
+    var(--hh-blue-400) 70%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 8px var(--hh-blue-500),
+    0 0 16px color-mix(in srgb, var(--hh-blue-400) 70%, transparent);
+  will-change: transform, opacity;
+  animation: hh-energy-travel 500ms ease-in-out forwards;
+}
+
+.dark .hh-steps__beam {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--hh-blue-400) 30%,
+    var(--hh-blue-300) 65%,
+    var(--hh-blue-200) 85%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 10px var(--hh-blue-400),
+    0 0 22px color-mix(in srgb, var(--hh-blue-300) 80%, transparent);
+}
+
+@keyframes hh-energy-travel {
+  0% {
+    transform: translate3d(0, -50%, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(
+      calc(var(--hh-step-width) - var(--hh-icon-size) - var(--hh-beam-width)),
+      -50%,
+      0
+    );
+    opacity: 0;
+  }
+}
+
+.hh-steps__card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 2;
+  width: var(--hh-step-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+  will-change: transform, opacity;
+}
+
+.hh-steps__card--far-left {
+  transform: translate3d(calc(-50% - var(--hh-step-width) * 2), 0, 0) scale(0.9);
+  opacity: 0;
+}
+
+.hh-steps__card--left {
+  transform: translate3d(calc(-50% - var(--hh-step-width)), 0, 0) scale(0.88);
+  opacity: 0.55;
+}
+
+.hh-steps__card--center {
+  transform: translate3d(-50%, 0, 0) scale(1);
+  opacity: 1;
+  z-index: 10;
+}
+
+.hh-steps__card--right {
+  transform: translate3d(calc(-50% + var(--hh-step-width)), 0, 0) scale(0.88);
+  opacity: 0.55;
+}
+
+.hh-steps__card--far-right {
+  transform: translate3d(calc(-50% + var(--hh-step-width) * 2), 0, 0) scale(0.9);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hh-steps__beam {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Captura: o palco ocupa o viewport e a máscara é aplicada na reprodução,
+   para o mesmo master servir a qualquer largura por corte central. */
+.hh-steps--capture {
+  width: 100%;
+  height: 100%;
+}
+
+.hh-steps--capture .hh-steps__stage {
+  height: 100%;
+  min-height: 100%;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.hh-steps--freeze,
+.hh-steps--freeze * {
+  transition: none !important;
+  animation: none !important;
+}

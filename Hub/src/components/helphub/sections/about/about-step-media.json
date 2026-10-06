@@ -1,0 +1,32 @@
+{
+  "desktop": {
+    "stepWidth": 180,
+    "width": 1100,
+    "height": 300,
+    "light": {
+      "mp4": "/about/steps-desktop.mp4",
+      "webm": "/about/steps-desktop.webm",
+      "poster": "/about/steps-desktop.webp"
+    },
+    "dark": {
+      "mp4": "/about/steps-desktop-dark.mp4",
+      "webm": "/about/steps-desktop-dark.webm",
+      "poster": "/about/steps-desktop-dark.webp"
+    }
+  },
+  "mobile": {
+    "stepWidth": 148,
+    "width": 760,
+    "height": 280,
+    "light": {
+      "mp4": "/about/steps-mobile.mp4",
+      "webm": "/about/steps-mobile.webm",
+      "poster": "/about/steps-mobile.webp"
+    },
+    "dark": {
+      "mp4": "/about/steps-mobile-dark.mp4",
+      "webm": "/about/steps-mobile-dark.webm",
+      "poster": "/about/steps-mobile-dark.webp"
+    }
+  }
+}
