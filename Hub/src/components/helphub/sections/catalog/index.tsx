@@ -8,7 +8,7 @@ import * as responsive from "@/lib/responsive";
 export function Catalog() {
   return (
     <div className="min-h-full bg-background text-foreground">
-      <SectionShell as="div" className="bg-background" padded={false} innerClassName="py-12 sm:py-20">
+      <SectionShell as="div" className="bg-background">
         <p className="text-sm font-bold tracking-[-0.03em] text-primary">
           Landing pages em pacotes
         </p>
@@ -68,7 +68,7 @@ export function Catalog() {
           ))}
         </ol>
 
-        <aside className="mt-14 grid gap-8 border border-border bg-card p-6 text-card-foreground sm:grid-cols-2 sm:p-8">
+        <aside className={cn(responsive.gridCols2, "mt-14 gap-8 border border-border bg-card p-6 text-card-foreground sm:p-8")}>
           <div>
             <p className="text-sm font-bold tracking-[-0.03em] text-primary">
               Negócio das demos

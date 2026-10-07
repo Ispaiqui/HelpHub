@@ -1,10 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useState, type CSSProperties, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PinScrubStage } from "@/components/premium/PinScrubProduct";
+import type { SceneProxy } from "@/components/premium/PinScrubProduct/types";
 import { HubFallback } from "@/components/premium/HubFallback";
 import { premiumScene } from "@/components/premium/premium-scene";
 import { animationBrief } from "@/lib/animation-brief";
@@ -39,6 +40,57 @@ type HeroScrubProps = {
 };
 
 const OPEN_SECONDS = 0.7;
+
+type HeroFit = "desktop" | "wide" | "narrow" | "short";
+
+type HeroProxies = {
+  from: SceneProxy;
+  enter: SceneProxy;
+  details: SceneProxy;
+  hero: SceneProxy;
+};
+
+const WIDE_PROXIES: HeroProxies = {
+  from: { rotY: -0.85, scale: 0.96, posY: -0.12, camZ: 4.35 },
+  enter: { rotY: 0.2, scale: 1.16, posY: 0, camZ: 4.15 },
+  details: { rotY: 1.15, scale: 1.16, posY: 0.02, camZ: 4.05 },
+  hero: { rotY: 0.45, scale: 1.28, posY: 0.04, camZ: 3.7 },
+};
+
+/** 1280+ : a mesma cena de antes, com a câmera mais perto para preencher o quadro largo. */
+const DESKTOP_PROXIES: HeroProxies = {
+  from: { rotY: -0.85, scale: 1.15, posY: -0.12, camZ: 3.45 },
+  enter: { rotY: 0.2, scale: 1.38, posY: 0, camZ: 3.25 },
+  details: { rotY: 1.15, scale: 1.38, posY: 0.02, camZ: 3.15 },
+  hero: { rotY: 0.45, scale: 1.52, posY: 0.04, camZ: 2.9 },
+};
+
+/** Recuo para a órbita caber na largura estreita (FOV 34). posY sobe no beat final. */
+const NARROW_PROXIES: HeroProxies = {
+  from: { rotY: -0.85, scale: 0.7, posY: -0.12, camZ: 7.2 },
+  enter: { rotY: 0.2, scale: 0.78, posY: 0, camZ: 7.6 },
+  details: { rotY: 1.15, scale: 0.78, posY: 0.02, camZ: 7.8 },
+  hero: { rotY: 0.45, scale: 0.86, posY: 0.72, camZ: 8.2 },
+};
+
+const SHORT_PROXIES: HeroProxies = {
+  ...NARROW_PROXIES,
+  hero: { rotY: 0.45, scale: 0.86, posY: 1.05, camZ: 8.2 },
+};
+
+function readHeroFit(): HeroFit {
+  if (window.matchMedia("(min-width: 1280px)").matches) return "desktop";
+  if (window.matchMedia("(max-height: 700px)").matches) return "short";
+  if (window.matchMedia("(max-width: 639px)").matches) return "narrow";
+  return "wide";
+}
+
+function proxiesFor(fit: HeroFit | "boot"): HeroProxies {
+  if (fit === "desktop") return DESKTOP_PROXIES;
+  if (fit === "short") return SHORT_PROXIES;
+  if (fit === "narrow") return NARROW_PROXIES;
+  return WIDE_PROXIES;
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -86,7 +138,25 @@ function lockPageScroll() {
  */
 export function HeroScrub({ endSlot }: HeroScrubProps) {
   const [scrollOn, setScrollOn] = useState(false);
+  const [fit, setFit] = useState<HeroFit | "boot">("boot");
+  const proxies = proxiesFor(fit);
   const { cor, copy, objetos } = animationBrief;
+
+  useLayoutEffect(() => {
+    const apply = () => setFit(readHeroFit());
+    apply();
+    const desktop = window.matchMedia("(min-width: 1280px)");
+    const narrow = window.matchMedia("(max-width: 639px)");
+    const short = window.matchMedia("(max-height: 700px)");
+    desktop.addEventListener("change", apply);
+    narrow.addEventListener("change", apply);
+    short.addEventListener("change", apply);
+    return () => {
+      desktop.removeEventListener("change", apply);
+      narrow.removeEventListener("change", apply);
+      short.removeEventListener("change", apply);
+    };
+  }, []);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -118,17 +188,18 @@ export function HeroScrub({ endSlot }: HeroScrubProps) {
   return (
     <section
       aria-label="Abertura HelpHub"
-      className="relative -mt-[var(--hh-header-height)]"
+      className="hh-hero relative -mt-[var(--hh-header-height)]"
       style={style}
     >
       <PinScrubStage
         runwayVh={380}
         scrub={0.85}
         beats={{ enter: [0, 0.2], details: [0.22, 0.52], hero: [0.52, 0.84] }}
-        proxyFrom={{ rotY: -0.85, scale: 0.96, posY: -0.12, camZ: 4.35 }}
-        proxyEnter={{ rotY: 0.2, scale: 1.16, posY: 0, camZ: 4.15 }}
-        proxyDetails={{ rotY: 1.15, scale: 1.16, posY: 0.02, camZ: 4.05 }}
-        proxyHero={{ rotY: 0.45, scale: 1.28, posY: 0.04, camZ: 3.7 }}
+        sceneKey={fit}
+        proxyFrom={proxies.from}
+        proxyEnter={proxies.enter}
+        proxyDetails={proxies.details}
+        proxyHero={proxies.hero}
         callouts={copy?.callouts ?? []}
         showChrome={false}
         showProgress={false}

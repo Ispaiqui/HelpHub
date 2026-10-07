@@ -74,6 +74,54 @@
   padding-inline: var(--hh-page-gutter);
 }
 
+/* Hero pinado: em tela baixa o título do token não cabe com os botões.
+   Desktop (1280+) fica de fora da redução de tipo: lá a cena é a original.
+   scaleY 1.05 (origem no topo) come a base no overflow do pin. O padding
+   de baixo sobra depois desse corte para o botão não encostar na seção
+   seguinte. Em tela baixa o miolo aperta para o título continuar visível. */
+.hh-hero [data-end-slot] {
+  padding-bottom: 3.5rem;
+}
+
+@media (min-width: 640px) and (max-width: 1279px) {
+  .hh-hero [data-end-slot] {
+    padding-bottom: 4.5rem;
+  }
+}
+
+@media (max-height: 700px) and (max-width: 1279px) {
+  .hh-hero-title {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .hh-hero [data-end-slot] {
+    padding-top: 0.75rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .hh-hero [data-end-slot] > p {
+    margin-top: 0.5rem;
+    line-height: 1.45;
+  }
+
+  .hh-hero [data-end-slot] > div {
+    margin-top: 0.75rem;
+    gap: 0.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hh-hero-title {
+    font-size: 3rem;
+    line-height: 1;
+  }
+
+  [data-end-slot] {
+    padding-inline: 2rem;
+  }
+}
+
 /* FEATURE FUTURA: Sistema de tela de carregamento (Loading Overlay).
    Removido por enquanto. Recuperar do histórico git junto com os componentes
    loading-* e reativar LoadingSystem no layout.tsx. */

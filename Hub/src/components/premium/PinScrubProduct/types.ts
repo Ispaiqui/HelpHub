@@ -75,8 +75,13 @@ export type SceneHandle = {
 };
 
 export type PinScrubStageProps = {
-  /** Altura da pista de scroll em vh (distância do pin). Padrão 320. */
+  /** Altura da pista de scroll em dvh (distância do pin). Padrão 320. */
   runwayVh?: number;
+  /**
+   * Muda quando o encaixe da cena muda (largura/altura).
+   * A timeline lê os proxies de um ref; esta chave força o rebuild.
+   */
+  sceneKey?: string;
   /** Atraso do scrub do ScrollTrigger. Padrão 0.85. */
   scrub?: number;
   beats?: BeatsConfig;

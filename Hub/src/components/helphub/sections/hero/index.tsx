@@ -11,7 +11,12 @@ export function Hero() {
     <HeroScrub
       endSlot={
         <>
-          <h1 className="text-3xl font-extrabold tracking-[-0.04em] text-[color:var(--lab-ink,#f8fafc)] sm:text-4xl xl:text-5xl">
+          <h1
+            className={cn(
+              responsive.heroTitle,
+              "hh-hero-title text-[color:var(--lab-ink,#f8fafc)]",
+            )}
+          >
             Você cuida do seu negócio. <br className="hidden md:block" />
             <span className="relative inline-block">
               <span className="absolute inset-0 rounded-full bg-primary/20 blur-md" />

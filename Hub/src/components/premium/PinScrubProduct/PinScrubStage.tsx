@@ -57,6 +57,7 @@ export function PinScrubStage({
   className = "",
   pinClassName = "",
   endHold = 0,
+  sceneKey = "",
   backdrop,
   reducedFallback,
   onProgress,
@@ -122,6 +123,9 @@ export function PinScrubStage({
     const endEl = root.querySelector<HTMLElement>("[data-end-slot]");
     const copyEls = [taglineEl, badgeEl, endEl].filter((el): el is HTMLElement => el instanceof HTMLElement);
     if (copyEls.length) gsap.set(copyEls, { opacity: 1, y: 0 });
+    if (endEl && !window.matchMedia("(min-width: 1280px)").matches) {
+      gsap.set(endEl, { scaleX: 1, scaleY: 1.05, transformOrigin: "top center" });
+    }
     if (hintEl) gsap.set(hintEl, { opacity: 0 });
     if (progressFillRef.current) progressFillRef.current.style.width = "100%";
     if (progressLabelRef.current) progressLabelRef.current.textContent = "100%";
@@ -131,6 +135,7 @@ export function PinScrubStage({
 
   useGSAP(
     () => {
+      if (sceneKey === "boot") return;
       setReady(true);
       if (reduced) {
         showFinalState();
@@ -157,6 +162,7 @@ export function PinScrubStage({
       const enter = mergeProxy(DEFAULT_PROXY_ENTER, pe);
       const details = mergeProxy(DEFAULT_PROXY_DETAILS, pd);
       const hero = mergeProxy(DEFAULT_PROXY_HERO, ph);
+      Object.assign(premiumScene.proxy, from);
       const beatCfg = b ?? DEFAULT_BEATS;
 
       const calloutEls = gsap.utils.toArray<HTMLElement>("[data-callout]", root);
@@ -181,7 +187,14 @@ export function PinScrubStage({
       });
       gsap.set(dotEls, { opacity: 0, scale: 0 });
       if (copyEls.length) gsap.set(copyEls, { opacity: 0, y: 18 });
-      if (endEl) gsap.set(endEl, { opacity: 0, y: 18 });
+      const endGrowsDown = Boolean(endEl) && !window.matchMedia("(min-width: 1280px)").matches;
+      if (endEl) {
+        gsap.set(endEl, {
+          opacity: 0,
+          y: 18,
+          ...(endGrowsDown ? { scaleX: 1, scaleY: 1.05, transformOrigin: "top center" } : {}),
+        });
+      }
       if (hintEl) gsap.set(hintEl, { opacity: 1 });
       syncEndInteractive(0);
 
@@ -330,7 +343,12 @@ export function PinScrubStage({
       if (endEl) {
         tl.to(
           endEl,
-          { opacity: 1, y: 0, duration: heroDur * 0.28 },
+          {
+            opacity: 1,
+            y: 0,
+            ...(endGrowsDown ? { scaleX: 1, scaleY: 1.05 } : {}),
+            duration: heroDur * 0.28,
+          },
           heroStart + heroDur * 0.72,
         );
       }
@@ -344,14 +362,14 @@ export function PinScrubStage({
         tl.kill();
       };
     },
-    { scope: rootRef, dependencies: [showFinalState, runwayVh, reduced, endHold] },
+    { scope: rootRef, revertOnUpdate: true, dependencies: [showFinalState, runwayVh, reduced, endHold, sceneKey] },
   );
 
   return (
     <div ref={rootRef} className={className}>
       <div
         className="lab-pin-runway relative"
-        style={{ height: `${runwayVh}vh` }}
+        style={{ height: `${runwayVh}dvh` }}
       >
         <div
           ref={pinRef}
@@ -429,7 +447,7 @@ export function PinScrubStage({
               <div
                 data-end-slot
                 inert={!endLive}
-                className={`absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-[var(--lab-bg,#0f172a)] via-[var(--lab-bg,#0f172a)]/88 to-transparent px-4 pt-16 pb-6 text-center opacity-0 sm:px-8 sm:pb-8 ${
+                className={`hh-page-content absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-[var(--lab-bg,#0f172a)] via-[var(--lab-bg,#0f172a)]/88 to-transparent pt-16 pb-6 text-center opacity-0 sm:pb-8 ${
                   endLive ? "pointer-events-auto" : "pointer-events-none"
                 }`}
               >

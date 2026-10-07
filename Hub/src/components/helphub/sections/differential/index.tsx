@@ -57,7 +57,7 @@ export function Differential() {
             <div className="absolute top-0 left-1/2 -mt-4 -translate-x-1/2 rounded-full bg-primary px-4 py-1.5 text-sm font-bold tracking-widest text-white uppercase shadow-lg">
               Queremos ser
             </div>
-            <h3 className="mt-4 text-2xl leading-relaxed font-bold text-white sm:text-3xl">
+            <h3 className={cn(responsive.sectionHeading, "mt-4 leading-relaxed text-white")}>
               A empresa que entende o <span className="text-hh-blue-300">problema do negócio</span> e encontra a <span className="text-hh-blue-300">tecnologia certa</span> para resolvê-lo.
             </h3>
           </div>
