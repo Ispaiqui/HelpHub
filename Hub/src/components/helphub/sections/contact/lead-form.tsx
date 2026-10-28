@@ -157,7 +157,7 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
           </div>
           <input type="hidden" name="startedAt" value={startedAt || ""} />
           {summary ? (
-            <p role="alert" className="text-sm text-destructive dark:text-red-400">
+            <p role="alert" className="text-sm text-red-700 dark:text-red-400">
               Revise os campos marcados.
             </p>
           ) : null}
@@ -265,7 +265,7 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
               />
               <span>{consentLabel}</span>
             </label>
-            <p id="consent-error" className="min-h-5 text-sm text-destructive dark:text-red-400">
+            <p id="consent-error" className="min-h-5 text-sm text-red-700 dark:text-red-400">
               {errors.consent ?? "\u00a0"}
             </p>
           </div>
