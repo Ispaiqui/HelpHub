@@ -13,7 +13,7 @@ export function Contact({ defaultPackage, source }: ContactProps) {
   return (
     <SectionShell
       padded={false}
-      className="flex min-h-full flex-col items-center justify-center overflow-x-clip bg-background py-6 sm:py-12 lg:py-24"
+      className="flex min-h-full flex-col items-center justify-start overflow-x-clip bg-background py-6 sm:py-12 lg:py-24"
       innerClassName="relative z-10"
       backdrop={
         <>

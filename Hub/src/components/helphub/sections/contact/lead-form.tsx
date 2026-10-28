@@ -61,7 +61,6 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
   const [summary, setSummary] = useState(false);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [hold, setHold] = useState<number>();
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     // Generated after mount so the server and client markup stay the same.
@@ -74,8 +73,6 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
   useEffect(() => {
     if (status !== "success") return;
     headingRef.current?.focus();
-    const frame = requestAnimationFrame(() => setVisible(true));
-    return () => cancelAnimationFrame(frame);
   }, [status]);
 
   function input(): LeadInput {
@@ -112,7 +109,6 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
     setErrors({});
     setSummary(false);
     setStatus("idle");
-    setVisible(false);
     setHold(undefined);
   }
 
@@ -153,7 +149,6 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
       } | null;
       if (response.ok && data?.ok) {
         setHold(frameRef.current?.offsetHeight);
-        setVisible(false);
         setStatus("success");
         onLeadSuccess(result.lead.leadId, result.lead.package);
         return;
@@ -182,13 +177,7 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
   return (
     <div ref={frameRef} style={status === "success" && hold ? { minHeight: hold } : undefined}>
       {status === "success" ? (
-        <div
-          role="status"
-          className={cn(
-            "space-y-4 transition-opacity duration-150 motion-reduce:transition-none",
-            visible ? "opacity-100" : "opacity-0",
-          )}
-        >
+        <div role="status" className="space-y-4 transition-opacity duration-150 motion-reduce:transition-none">
           <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-bold text-foreground outline-none">
             Recebemos sua mensagem.
           </h2>
