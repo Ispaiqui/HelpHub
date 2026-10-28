@@ -52,43 +52,7 @@ export const testimonialShort = {
   place: "Centro",
 } as const;
 
-export const packages = [
-  {
-    slug: "plus",
-    href: "/demonstracoes/plus",
-    name: "Plus",
-    positioning:
-      "O equilíbrio para negócios locais e prestadores de serviço.",
-    density: "Layout local · CSS com stagger",
-    price: "R$ 724,90",
-    priceNote: "pagamento único",
-    recommended: false,
-  },
-  {
-    slug: "avancado",
-    href: "/demonstracoes/avancado",
-    name: "Avançado",
-    positioning:
-      "Recomendado para uma página completa, com foco em conversão.",
-    density: "Copy cheia · framer-motion em todo o arco",
-    price: "R$ 882,77",
-    priceNote: "pagamento único",
-    recommended: true,
-  },
-  {
-    slug: "premium",
-    href: "/demonstracoes/premium",
-    name: "Premium",
-    positioning:
-      "Conteúdo e recursos completos, com mais rodadas de revisão.",
-    density: "Craft editorial · parallax e motion",
-    price: "R$ 1.399,10",
-    priceNote: "pagamento único",
-    recommended: false,
-  },
-] as const;
-
-export type PackageSlug = (typeof packages)[number]["slug"];
+export { packages, type PackageSlug } from "@/lib/pricing";
 
 export type FaqItem = {
   q: string;

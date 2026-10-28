@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { SectionShell } from "@/components/helphub/layout";
+import { PackageMatrix } from "@/components/helphub/sections/pricing";
 import { packages } from "@/lib/demonstracoes/content";
+import { formatBRL } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import * as responsive from "@/lib/responsive";
 
@@ -56,17 +58,25 @@ export function Catalog() {
                 {pkg.positioning}
               </p>
               <p className="mt-6 text-3xl font-extrabold tracking-[-0.04em] text-foreground">
-                {pkg.price}
+                {formatBRL(pkg.priceCents)}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">{pkg.priceNote}</p>
-              <Link
-                href={pkg.href}
-                className={cn(buttonVariants(), "mt-8 w-full")}
-              >                <span className="relative z-10">Ver demo</span>
-              </Link>
+              <div className="mt-8 flex flex-col gap-3">
+                <Link href={pkg.href} className={cn(buttonVariants(), "w-full")}>
+                  <span className="relative z-10">Ver demo</span>
+                </Link>
+                <Link
+                  href={`/formularios?pacote=${pkg.slug}&origem=demonstracoes`}
+                  className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+                >
+                  Quero este pacote
+                </Link>
+              </div>
             </li>
           ))}
         </ol>
+
+        <PackageMatrix />
 
         <aside className={cn(responsive.gridCols2, "mt-14 gap-8 border border-border bg-card p-6 text-card-foreground sm:p-8")}>
           <div>

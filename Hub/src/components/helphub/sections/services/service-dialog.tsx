@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Check } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -85,6 +86,13 @@ export function ServiceDialog({ selected, onClose }: ServiceDialogProps) {
             >
               <span className="relative z-10">{selected.cta}</span>
             </a>
+            <Link
+              href={`/formularios?origem=servicos-${selected.id}`}
+              className="mt-3 inline-flex min-h-11 items-center justify-center text-sm text-primary underline-offset-4 hover:underline"
+              onClick={onClose}
+            >
+              Prefiro preencher o formulário
+            </Link>
           </div>
         </DialogContent>
       )}
