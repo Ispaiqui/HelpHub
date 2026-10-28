@@ -24,6 +24,7 @@ export function BrandLockup({
   return (
     <Link
       href={href}
+      prefetch={href === "/" || href.startsWith("/#") ? false : undefined}
       onClick={onClick}
       className={cn("flex items-center", symbol && "gap-2", className)}
     >

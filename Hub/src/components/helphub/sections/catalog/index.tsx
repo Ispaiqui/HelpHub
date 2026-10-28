@@ -62,7 +62,7 @@ export function Catalog() {
               </p>
               <p className="mt-1 text-sm text-muted-foreground">{pkg.priceNote}</p>
               <div className="mt-8 flex flex-col gap-3">
-                <Link href={pkg.href} className={cn(buttonVariants(), "w-full")}>
+                <Link href={pkg.href} prefetch={false} className={cn(buttonVariants(), "w-full")}>
                   <span className="relative z-10">Ver demo</span>
                 </Link>
                 <Link

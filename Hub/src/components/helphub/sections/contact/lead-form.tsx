@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { registerLead, type LeadInput, type RegisterLeadErrors } from "@helphub/crm";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,10 +45,21 @@ function sourcePage(origem: string | undefined) {
   return "/formularios";
 }
 
+function waMessage(fields: { nome: string; pacote: string; mensagem: string; pagina: string }) {
+  const lines = ["Gostaria de saber mais sobre um site.", ""];
+  for (const [label, value] of [
+    ["Nome", fields.nome],
+    ["Pacote de interesse", fields.pacote],
+    ["Mensagem", fields.mensagem],
+    ["Página de origem", fields.pagina],
+  ] as const) {
+    const text = value.trim();
+    if (text) lines.push(`*${label}:* ${text}`);
+  }
+  return lines.join("\n");
+}
+
 export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: LeadFormProps) {
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const frameRef = useRef<HTMLDivElement>(null);
-  const [leadId, setLeadId] = useState("");
   const [startedAt, setStartedAt] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -59,25 +70,18 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
   const [companySite, setCompanySite] = useState("");
   const [errors, setErrors] = useState<RegisterLeadErrors>({});
   const [summary, setSummary] = useState(false);
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [hold, setHold] = useState<number>();
+  const [waHref, setWaHref] = useState("");
 
   useEffect(() => {
-    // Generated after mount so the server and client markup stay the same.
+    // Stamp after mount so server and client markup stay the same.
     /* eslint-disable react-hooks/set-state-in-effect */
-    setLeadId(crypto.randomUUID());
     setStartedAt(Date.now());
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
-  useEffect(() => {
-    if (status !== "success") return;
-    headingRef.current?.focus();
-  }, [status]);
-
   function input(): LeadInput {
     return {
-      leadId: leadId || crypto.randomUUID(),
+      leadId: crypto.randomUUID(),
       name,
       email,
       phone,
@@ -96,99 +100,39 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
     }));
   }
 
-  function reset() {
-    setLeadId(crypto.randomUUID());
-    setStartedAt(Date.now());
-    setName("");
-    setEmail("");
-    setPhone("");
-    setSelected(initialPackage(defaultPackage));
-    setMessage("");
-    setConsent(false);
-    setCompanySite("");
-    setErrors({});
-    setSummary(false);
-    setStatus("idle");
-    setHold(undefined);
-  }
-
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (status === "submitting") return;
     const payload = input();
     const result = registerLead(payload, ALLOWED);
     if (!result.ok) {
+      setWaHref("");
       setErrors(result.errors);
       setSummary(true);
-      setStatus("idle");
       const first = FIELDS.find((field) => result.errors[field]);
       if (first) document.getElementById(first)?.focus();
       return;
     }
 
+    const elapsed = startedAt > 0 ? Date.now() - startedAt : 0;
+    if (companySite.trim() || elapsed < 3000) return;
+
     setErrors({});
     setSummary(false);
-    setStatus("submitting");
-    const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort(), 10_000);
-    try {
-      const response = await fetch("/api/crm/leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
-        body: JSON.stringify({
-          ...payload,
-          leadId: result.lead.leadId,
-          company_site: companySite,
-          startedAt,
-        }),
-      });
-      const data = (await response.json().catch(() => null)) as {
-        ok?: boolean;
-        errors?: RegisterLeadErrors;
-      } | null;
-      if (response.ok && data?.ok) {
-        setHold(frameRef.current?.offsetHeight);
-        setStatus("success");
-        onLeadSuccess(result.lead.leadId, result.lead.package);
-        return;
-      }
-      if (response.status === 400 && data?.errors) {
-        setErrors(data.errors);
-        setSummary(true);
-        setStatus("idle");
-        const first = FIELDS.find((field) => data.errors?.[field]);
-        if (first) document.getElementById(first)?.focus();
-        return;
-      }
-      setStatus("error");
-    } catch {
-      setStatus("error");
-    } finally {
-      window.clearTimeout(timer);
-    }
+    const href = whatsappHref(
+      waMessage({
+        nome: result.lead.name,
+        pacote: interestOptions.find((option) => option.slug === result.lead.package)?.label ?? "",
+        mensagem: result.lead.message,
+        pagina: result.lead.sourcePage,
+      }),
+    );
+    onLeadSuccess(result.lead.leadId, result.lead.package);
+    const popup = window.open(href, "_blank", "noopener,noreferrer");
+    if (!popup) setWaHref(href);
   }
 
-  const packageLabel = interestOptions.find((option) => option.slug === selected)?.label ?? "";
-  const fallback = whatsappHref(
-    [`Nome: ${name}`, `Pacote: ${packageLabel}`, message].join("\n").slice(0, 500),
-  );
-
   return (
-    <div ref={frameRef} style={status === "success" && hold ? { minHeight: hold } : undefined}>
-      {status === "success" ? (
-        <div role="status" className="space-y-4 transition-opacity duration-150 motion-reduce:transition-none">
-          <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-bold text-foreground outline-none">
-            Recebemos sua mensagem.
-          </h2>
-          <p className="text-base text-muted-foreground">
-            Respondemos em até 1 dia útil. Entraremos em contato.
-          </p>
-          <Button type="button" className="h-12 w-full text-base" onClick={reset}>
-            Enviar outra mensagem
-          </Button>
-        </div>
-      ) : (
+    <div>
         <form className="relative space-y-2" onSubmit={onSubmit} noValidate>
           <div className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
             <label htmlFor="company_site">Site</label>
@@ -202,37 +146,21 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
               onChange={(event) => setCompanySite(event.target.value)}
             />
           </div>
-          <input type="hidden" name="leadId" value={leadId} />
           <input type="hidden" name="startedAt" value={startedAt || ""} />
           {summary ? (
             <p role="alert" className="text-sm text-destructive">
               Revise os campos marcados.
             </p>
           ) : null}
-          {status === "error" ? (
-            <div role="alert" className="space-y-3 rounded-lg border border-destructive/40 bg-destructive/10 p-4">
-              <p className="text-sm text-foreground">
-                Não conseguimos enviar agora. Seus dados continuam aqui.
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={fallback}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(buttonVariants(), "h-12 w-full text-base sm:flex-1")}
-                >
-                  Enviar pelo WhatsApp
-                </a>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-12 w-full text-base sm:flex-1"
-                  onClick={() => setStatus("idle")}
-                >
-                  Tentar de novo
-                </Button>
-              </div>
-            </div>
+          {waHref ? (
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants(), "h-12 w-full text-base")}
+            >
+              Abrir conversa no WhatsApp
+            </a>
           ) : null}
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <Field id="name" label="Nome" error={errors.name}>
@@ -282,13 +210,15 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
               onChange={(event) => setSelected(event.target.value as InterestSlug | "")}
               onBlur={() => touch("package")}
               className={cn(
-                CONTROL,
-                "w-full rounded-lg border border-input outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive",
+                "h-12 w-full rounded-lg border border-input bg-background px-4 text-base text-foreground scheme-light dark:scheme-dark",
+                "outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive",
               )}
             >
-              <option value="">Selecione</option>
+              <option value="" className="bg-background text-foreground">
+                Selecione
+              </option>
               {interestOptions.map((option) => (
-                <option key={option.slug} value={option.slug}>
+                <option key={option.slug} value={option.slug} className="bg-background text-foreground">
                   {option.label}
                 </option>
               ))}
@@ -323,17 +253,11 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
               {errors.consent ?? "\u00a0"}
             </p>
           </div>
-          <Button
-            type="submit"
-            className="h-12 w-full text-base"
-            disabled={status === "submitting"}
-            aria-busy={status === "submitting"}
-          >
-            {status === "submitting" ? "Enviando…" : "Enviar mensagem"}
+          <Button type="submit" className="h-12 w-full text-base">
+            Enviar mensagem
           </Button>
           <p className="text-sm leading-6 text-muted-foreground">{consentNote}</p>
         </form>
-      )}
     </div>
   );
 }
