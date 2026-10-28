@@ -26,6 +26,14 @@ function isHomePath(pathname: string) {
   return HOME_PATHS.has(pathname);
 }
 
+function scrollToSection(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const header = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+  const top = el.getBoundingClientRect().top + window.scrollY - header;
+  window.scrollTo({ top, behavior: "instant" });
+}
+
 function scrollToPageTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
   const nextUrl = `${window.location.pathname}${window.location.search}#topo`;
@@ -74,8 +82,44 @@ export function Header() {
     router.push(INICIO_HREF);
   };
 
+  const goToHash = (href: string) => {
+    const id = href.startsWith("/#") ? href.slice(2) : "";
+    if (!id) return false;
+    if (isHomePath(pathname)) {
+      if (id === "topo") scrollToPageTop();
+      else scrollToSection(id);
+      return true;
+    }
+    sessionStorage.setItem("hh-scroll", id);
+    router.push(href);
+    return true;
+  };
+
+  React.useEffect(() => {
+    if (!isHomePath(pathname)) return;
+    const id = sessionStorage.getItem("hh-scroll") || window.location.hash.replace(/^#/, "");
+    sessionStorage.removeItem("hh-scroll");
+    if (!id || id === "topo") return;
+    let frames = 0;
+    let raf = 0;
+    const run = () => {
+      if (!document.getElementById(id) && frames++ < 40) {
+        raf = requestAnimationFrame(run);
+        return;
+      }
+      scrollToSection(id);
+    };
+    raf = requestAnimationFrame(run);
+    const later = window.setTimeout(run, 100);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(later);
+    };
+  }, [pathname]);
+
   const handleNav = (href: string) => {
     setIsOpen(false);
+    if (goToHash(href)) return;
     if (href === INICIO_HREF) {
       goToInicio();
       return;
@@ -96,7 +140,7 @@ export function Header() {
 
         {/* ≥md: desktop nav */}
         <nav
-          className={cn(responsive.navDesktop, "absolute left-1/2 -translate-x-1/2 items-center gap-8")}
+          className={cn(responsive.navDesktop, "absolute left-1/2 -translate-x-1/2 items-center gap-4")}
           onMouseLeave={hidePill}
           onBlur={(event) => {
             const next = event.relatedTarget;
@@ -113,7 +157,17 @@ export function Header() {
             <Link
               key={link.name}
               href={link.href}
-              onClick={link.href === INICIO_HREF ? handleInicioClick : undefined}
+              prefetch={false}
+              onClick={(event) => {
+                if (link.href === INICIO_HREF) {
+                  handleInicioClick(event);
+                  return;
+                }
+                if (link.href.startsWith("/#")) {
+                  event.preventDefault();
+                  goToHash(link.href);
+                }
+              }}
               onMouseEnter={(event) => placePill(event.currentTarget)}
               onFocus={(event) => placePill(event.currentTarget)}
               className="hh-charge relative z-10 px-2 py-1 text-sm font-medium text-muted-foreground hover:text-primary"
@@ -133,7 +187,7 @@ export function Header() {
           >
             Contato
           </a>
-          <Button className="rounded-full" onClick={() => router.push("/#servicos")}>
+          <Button className="rounded-full" onClick={() => router.push("/formularios?origem=header")}>
             Começar agora
           </Button>
         </div>
@@ -173,7 +227,7 @@ export function Header() {
                   >
                     Contato
                   </a>
-                  <Button className="w-full justify-center" onClick={() => handleNav("/#servicos")}>
+                  <Button className="w-full justify-center" onClick={() => handleNav("/formularios?origem=header")}>
                     Começar agora
                   </Button>
                 </div>

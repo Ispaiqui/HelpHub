@@ -56,6 +56,12 @@ export function Hero() {
               <span className="relative z-10">Falar com um especialista</span>
             </a>
           </div>
+          <Link
+            href="/formularios?origem=hero"
+            className="mt-4 inline-flex min-h-11 items-center text-sm text-[color:color-mix(in_srgb,var(--lab-ink,#f8fafc)_86%,transparent)] underline-offset-4 hover:underline"
+          >
+            ou envie uma mensagem pelo formulário →
+          </Link>
         </>
       }
     />

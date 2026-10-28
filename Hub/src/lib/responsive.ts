@@ -32,9 +32,9 @@ export const stackToRowLg = "flex flex-col lg:flex-row";
 
 export const stackToRowSm = "flex flex-col sm:flex-row";
 
-export const navDesktop = "hidden md:flex";
+export const navDesktop = "hidden xl:flex";
 
-export const navMobile = "md:hidden";
+export const navMobile = "xl:hidden";
 
 /** Um slide no centro; vizinhos só espiam. Largura menor que o trilho cheio. */
 export const carouselItemBasis = "basis-[70%] sm:basis-[44%] lg:basis-[34%]";

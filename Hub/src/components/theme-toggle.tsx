@@ -7,13 +7,18 @@ import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 
 export function ThemeToggle() {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, resolvedTheme } = useTheme()
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={() => {
+        const current =
+          resolvedTheme ??
+          (document.documentElement.classList.contains("dark") ? "dark" : "light")
+        setTheme(current === "dark" ? "light" : "dark")
+      }}
       title="Alternar tema"
       className="rounded-full"
     >

@@ -28,7 +28,11 @@ export function Footer() {
             <ul className="space-y-2 text-sm sm:space-y-3 sm:text-base">
               {footerLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="transition-colors hover:text-primary">
+                  <Link
+                    href={link.href}
+                    prefetch={link.href.includes("#") ? false : undefined}
+                    className="transition-colors hover:text-primary"
+                  >
                     {link.name}
                   </Link>
                 </li>
