@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { registerLead, type LeadInput, type RegisterLeadErrors } from "@helphub/crm";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,7 +70,9 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
   const [companySite, setCompanySite] = useState("");
   const [errors, setErrors] = useState<RegisterLeadErrors>({});
   const [summary, setSummary] = useState(false);
-  const [waHref, setWaHref] = useState("");
+  const [wa, setWa] = useState<{ href: string; blocked: boolean } | null>(null);
+  const statusRef = useRef<HTMLDivElement>(null);
+  const sent = useRef(false);
 
   useEffect(() => {
     // Stamp after mount so server and client markup stay the same.
@@ -100,12 +102,17 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
     }));
   }
 
+  useEffect(() => {
+    if (wa) statusRef.current?.focus();
+  }, [wa]);
+
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (sent.current) return;
     const payload = input();
     const result = registerLead(payload, ALLOWED);
     if (!result.ok) {
-      setWaHref("");
+      setWa(null);
       setErrors(result.errors);
       setSummary(true);
       const first = FIELDS.find((field) => result.errors[field]);
@@ -116,6 +123,7 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
     const elapsed = startedAt > 0 ? Date.now() - startedAt : 0;
     if (companySite.trim() || elapsed < 3000) return;
 
+    sent.current = true;
     setErrors({});
     setSummary(false);
     const href = whatsappHref(
@@ -127,8 +135,9 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
       }),
     );
     onLeadSuccess(result.lead.leadId, result.lead.package);
-    const popup = window.open(href, "_blank", "noopener,noreferrer");
-    if (!popup) setWaHref(href);
+    const popup = window.open(href, "_blank");
+    if (popup) popup.opener = null;
+    setWa({ href, blocked: popup === null });
   }
 
   return (
@@ -152,15 +161,22 @@ export function LeadForm({ defaultPackage, source, consentLabel, consentNote }: 
               Revise os campos marcados.
             </p>
           ) : null}
-          {waHref ? (
-            <a
-              href={waHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(buttonVariants(), "h-12 w-full text-base")}
-            >
-              Abrir conversa no WhatsApp
-            </a>
+          {wa ? (
+            <div ref={statusRef} tabIndex={-1} role={wa.blocked ? "alert" : "status"} className="space-y-3 outline-none">
+              <p className="text-sm text-foreground">
+                {wa.blocked
+                  ? "O navegador bloqueou o WhatsApp. Use o botão abaixo."
+                  : "Abrindo o WhatsApp… Se não abrir, use o botão abaixo."}
+              </p>
+              <a
+                href={wa.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(buttonVariants(), "h-12 w-full text-base")}
+              >
+                Abrir conversa no WhatsApp
+              </a>
+            </div>
           ) : null}
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <Field id="name" label="Nome" error={errors.name}>
