@@ -38,7 +38,7 @@ export function Field({ id, label, className, error, hint, children }: FieldProp
           {hint}
         </p>
       ) : null}
-      <p id={`${id}-error`} className="min-h-5 text-sm text-destructive">
+      <p id={`${id}-error`} className="min-h-5 text-sm text-destructive dark:text-red-400">
         {error ?? "\u00a0"}
       </p>
     </div>
